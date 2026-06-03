@@ -1,5 +1,10 @@
 # Gestor de Siniestros — Frontend
 
+![CI](https://github.com/ale-dm/gestor-siniestros-frontend/actions/workflows/ci.yml/badge.svg)
+![Angular](https://img.shields.io/badge/Angular-18-DD0031?logo=angular)
+![PrimeNG](https://img.shields.io/badge/PrimeNG-18-3B82F6?logo=primeng)
+![Deploy](https://img.shields.io/badge/deploy-Vercel-black?logo=vercel)
+
 Aplicación web para la gestión de siniestros de seguros. Proyecto de portfolio full-stack construido con Angular 18 y PrimeNG.
 
 🌐 **Demo**: https://gestor-siniestros-frontend.vercel.app  
@@ -147,6 +152,27 @@ ng build --configuration production
 ```
 
 El output se genera en `dist/frontend/browser/`.
+
+---
+
+## Tests
+
+El proyecto incluye tests con **Jasmine + Karma**.
+
+```bash
+ng test --watch=false --browsers=ChromeHeadless
+```
+
+| Fichero | Casos |
+|---|---|
+| `auth.service.spec.ts` | login, logout, isLoggedIn (token expirado/válido), getRole, hasRole |
+| `jwt.interceptor.spec.ts` | añade header Authorization, no añade sin token |
+| `error.interceptor.spec.ts` | logout en 401, no logout en 422, propaga mensaje |
+| `auth.guard.spec.ts` | permite acceso autenticado, redirige a /login sin auth |
+| `lista-clientes.component.spec.ts` | carga inicial, búsqueda con debounce, paginación |
+| `app.component.spec.ts` | creación, navItems, detección de ruta login |
+
+El workflow de GitHub Actions ejecuta los tests y el build de producción en cada push y pull request.
 
 ---
 

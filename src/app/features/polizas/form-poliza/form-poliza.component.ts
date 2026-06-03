@@ -1,0 +1,89 @@
+import { Component, OnInit } from '@angular/core';
+import { FormBuilder, FormGroup, Validators } from '@angular/forms';
+import { ActivatedRoute, Router } from '@angular/router';
+import { ToastService } from '../../../core/services/toast.service';
+import { PolizaService } from '../../../core/services/poliza.service';
+import { ClienteService } from '../../../core/services/cliente.service';
+import { Cliente } from '../../../core/models/cliente.model';
+
+@Component({
+  selector: 'app-form-poliza',
+  templateUrl: './form-poliza.component.html'
+})
+export class FormPolizaComponent implements OnInit {
+
+  form: FormGroup;
+  loading = false;
+  saving = false;
+  polizaId: number | null = null;
+  clientes: { label: string; value: number }[] = [];
+
+  tipos = [
+    { label: 'Hogar', value: 'HOGAR' },
+    { label: 'Auto', value: 'AUTO' },
+    { label: 'Vida', value: 'VIDA' },
+    { label: 'Salud', value: 'SALUD' }
+  ];
+
+  constructor(
+    private fb: FormBuilder,
+    private polizaService: PolizaService,
+    private clienteService: ClienteService,
+    private toast: ToastService,
+    private router: Router,
+    private route: ActivatedRoute
+  ) {
+    this.form = this.fb.group({
+      tipo:             ['', Validators.required],
+      fechaInicio:      ['', Validators.required],
+      fechaVencimiento: ['', Validators.required],
+      coberturaMaxima:  [null, [Validators.required, Validators.min(0.01)]],
+      primaMensual:     [null],
+      descripcion:      ['', Validators.maxLength(500)],
+      clienteId:        [null, Validators.required]
+    });
+  }
+
+  ngOnInit(): void {
+    this.clienteService.listar('', 0, 100).subscribe(res => {
+      this.clientes = res.content.map(c => ({
+        label: `${c.apellidos}, ${c.nombre} (${c.dni})`,
+        value: c.id
+      }));
+    });
+
+    const id = this.route.snapshot.paramMap.get('id');
+    if (id) {
+      this.polizaId = +id;
+      this.loading = true;
+      this.polizaService.obtener(this.polizaId).subscribe({
+        next: p => {
+          this.form.patchValue({ ...p, clienteId: p.cliente?.id });
+          this.loading = false;
+        },
+        error: () => { this.loading = false; this.router.navigate(['/polizas']); }
+      });
+    }
+  }
+
+  get esEdicion(): boolean { return this.polizaId !== null; }
+
+  guardar(): void {
+    if (this.form.invalid) { this.form.markAllAsTouched(); return; }
+    this.saving = true;
+    const op = this.esEdicion
+      ? this.polizaService.actualizar(this.polizaId!, this.form.value)
+      : this.polizaService.crear(this.form.value);
+
+    op.subscribe({
+      next: () => {
+        this.toast.success('Póliza guardada correctamente');
+        setTimeout(() => this.router.navigate(['/polizas']), 800);
+      },
+      error: err => { this.toast.error(err.message); this.saving = false; }
+    });
+  }
+
+  cancelar(): void { this.router.navigate(['/polizas']); }
+  fieldInvalid(name: string): boolean { const c = this.form.get(name); return !!(c?.invalid && c?.touched); }
+}

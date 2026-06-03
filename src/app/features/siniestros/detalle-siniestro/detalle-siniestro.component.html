@@ -1,0 +1,118 @@
+
+
+<ng-container *ngIf="siniestro">
+
+  <div class="page-header">
+    <div class="flex align-items-center gap-3">
+      <p-button icon="pi pi-arrow-left" [text]="true" severity="secondary" routerLink="/siniestros" />
+      <h1 class="page-title mb-0">{{ siniestro.numeroSiniestro }}</h1>
+      <p-tag [value]="etiqueta(siniestro.estado)" [severity]="severidad(siniestro.estado)" />
+    </div>
+    <div class="flex gap-2">
+      <p-button label="Asignar perito" icon="pi pi-user-plus" severity="info" [outlined]="true"
+        (onClick)="abrirDialogPerito()" *ngIf="puedeAsignarPerito" />
+      <p-button label="Cambiar estado" icon="pi pi-refresh"
+        (onClick)="abrirDialogEstado()" *ngIf="puedeCambiarEstado" />
+    </div>
+  </div>
+
+  <div class="grid">
+
+    <!-- Info principal -->
+    <div class="col-12 md:col-8">
+      <p-card header="Datos del siniestro" styleClass="h-full">
+        <div class="grid">
+          <div class="col-6">
+            <p class="text-color-secondary text-sm mb-1">Póliza</p>
+            <p class="font-semibold">{{ siniestro.poliza.numeroPoliza }} ({{ siniestro.poliza.tipo }})</p>
+          </div>
+          <div class="col-6">
+            <p class="text-color-secondary text-sm mb-1">Perito asignado</p>
+            <p class="font-semibold">{{ siniestro.perito ? siniestro.perito.nombre + ' ' + siniestro.perito.apellidos : '—' }}</p>
+          </div>
+          <div class="col-6">
+            <p class="text-color-secondary text-sm mb-1">Fecha apertura</p>
+            <p class="font-semibold">{{ siniestro.fechaApertura | date:'dd/MM/yyyy HH:mm' }}</p>
+          </div>
+          <div class="col-6">
+            <p class="text-color-secondary text-sm mb-1">Fecha resolución</p>
+            <p class="font-semibold">{{ siniestro.fechaResolucion ? (siniestro.fechaResolucion | date:'dd/MM/yyyy HH:mm') : '—' }}</p>
+          </div>
+          <div class="col-6">
+            <p class="text-color-secondary text-sm mb-1">Importe reclamado</p>
+            <p class="font-semibold">{{ siniestro.importeReclamado | currency:'EUR':'symbol':'1.2-2':'es' }}</p>
+          </div>
+          <div class="col-6">
+            <p class="text-color-secondary text-sm mb-1">Importe indemnizado</p>
+            <p class="font-semibold" [class.text-green-400]="siniestro.importeIndemnizado">
+              {{ siniestro.importeIndemnizado ? (siniestro.importeIndemnizado | currency:'EUR':'symbol':'1.2-2':'es') : '—' }}
+            </p>
+          </div>
+          <div class="col-12">
+            <p class="text-color-secondary text-sm mb-1">Descripción</p>
+            <p>{{ siniestro.descripcion }}</p>
+          </div>
+          <div class="col-12" *ngIf="siniestro.observaciones">
+            <p class="text-color-secondary text-sm mb-1">Observaciones</p>
+            <p>{{ siniestro.observaciones }}</p>
+          </div>
+        </div>
+      </p-card>
+    </div>
+
+    <!-- Timeline de log -->
+    <div class="col-12 md:col-4">
+      <p-card header="Historial de cambios">
+        <p-timeline [value]="logs" styleClass="w-full">
+          <ng-template pTemplate="content" let-log>
+            <div class="mb-2">
+              <p-tag [value]="etiqueta(log.estadoNuevo)" [severity]="severidad(log.estadoNuevo)" styleClass="mb-1" />
+              <p class="text-sm text-color-secondary mt-1">{{ log.fecha | date:'dd/MM/yyyy HH:mm' }}</p>
+              <p class="text-sm" *ngIf="log.usuario">{{ log.usuario.nombre }} {{ log.usuario.apellidos }}</p>
+              <p class="text-sm text-color-secondary" *ngIf="log.observaciones">{{ log.observaciones }}</p>
+            </div>
+          </ng-template>
+        </p-timeline>
+        <p *ngIf="!logs.length" class="text-color-secondary text-sm">Sin historial</p>
+      </p-card>
+    </div>
+
+  </div>
+
+</ng-container>
+
+<!-- Dialog cambio de estado -->
+<p-dialog header="Cambiar estado" [(visible)]="mostrarDialogEstado" [modal]="true" [style]="{width:'420px'}">
+  <form [formGroup]="formEstado" class="flex flex-column gap-3 pt-2">
+    <div class="field">
+      <label>Nuevo estado *</label>
+      <p-dropdown [options]="estados" formControlName="estado" styleClass="w-full" placeholder="Selecciona estado" />
+    </div>
+    <div class="field" *ngIf="formEstado.get('estado')?.value === 'RESUELTO'">
+      <label>Importe indemnizado (€) *</label>
+      <p-inputNumber formControlName="importeIndemnizado" styleClass="w-full" mode="currency" currency="EUR" locale="es-ES" />
+    </div>
+    <div class="field" *ngIf="formEstado.get('estado')?.value === 'DENEGADO'">
+      <label>Observaciones (motivo denegación) *</label>
+      <textarea pTextarea formControlName="observaciones" rows="3" class="w-full"></textarea>
+    </div>
+  </form>
+  <ng-template pTemplate="footer">
+    <p-button label="Cancelar" severity="secondary" [outlined]="true" (onClick)="mostrarDialogEstado=false" />
+    <p-button label="Confirmar" (onClick)="cambiarEstado()" [loading]="guardando" />
+  </ng-template>
+</p-dialog>
+
+<!-- Dialog asignar perito -->
+<p-dialog header="Asignar perito" [(visible)]="mostrarDialogPerito" [modal]="true" [style]="{width:'360px'}">
+  <form [formGroup]="formPerito" class="pt-2">
+    <div class="field">
+      <label>Perito *</label>
+      <p-dropdown [options]="peritos" formControlName="peritoId" styleClass="w-full" placeholder="Selecciona perito" />
+    </div>
+  </form>
+  <ng-template pTemplate="footer">
+    <p-button label="Cancelar" severity="secondary" [outlined]="true" (onClick)="mostrarDialogPerito=false" />
+    <p-button label="Asignar" (onClick)="asignarPerito()" [loading]="guardando" />
+  </ng-template>
+</p-dialog>

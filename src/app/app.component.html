@@ -1,0 +1,73 @@
+<!-- Toast y ConfirmDialog globales -->
+<p-toast position="bottom-right" />
+<p-confirmDialog />
+
+<ng-container *ngIf="isLoginPage; else appLayout">
+  <router-outlet />
+</ng-container>
+
+<ng-template #appLayout>
+  <div class="app-shell">
+
+    <!-- Backdrop (solo móvil) -->
+    <div class="sidebar-backdrop"
+         [class.visible]="sidebarOpen && isMobile"
+         (click)="closeSidebar()">
+    </div>
+
+    <!-- Sidebar -->
+    <nav class="app-sidebar" [class.sidebar--open]="sidebarOpen">
+      <div class="sidebar-logo">
+        <i class="pi pi-shield"></i>
+        <span>Siniestros</span>
+        <!-- Botón cerrar en móvil -->
+        <button class="sidebar-close" *ngIf="isMobile" (click)="closeSidebar()">
+          <i class="pi pi-times"></i>
+        </button>
+      </div>
+
+      <ul class="nav-list">
+        <li *ngFor="let item of navItems">
+          <a [routerLink]="item.route" routerLinkActive="active" class="nav-item">
+            <i [class]="item.icon"></i>
+            <span>{{ item.label }}</span>
+          </a>
+        </li>
+      </ul>
+
+      <div class="sidebar-footer">
+        <div class="user-info" *ngIf="currentUser">
+          <div class="user-avatar"><i class="pi pi-user"></i></div>
+          <div class="user-details">
+            <span class="user-name">{{ currentUser.nombre }}</span>
+            <span class="user-role">{{ currentUser.rol }}</span>
+          </div>
+        </div>
+        <button class="logout-btn" (click)="logout()" pRipple>
+          <i class="pi pi-sign-out"></i>
+          <span>Cerrar sesión</span>
+        </button>
+      </div>
+    </nav>
+
+    <!-- Área principal -->
+    <div class="app-content">
+
+      <!-- Topbar (solo móvil) -->
+      <header class="app-topbar" *ngIf="isMobile">
+        <button class="topbar-menu-btn" (click)="toggleSidebar()">
+          <i class="pi pi-bars"></i>
+        </button>
+        <div class="topbar-logo">
+          <i class="pi pi-shield"></i>
+          <span>Siniestros</span>
+        </div>
+      </header>
+
+      <main class="app-main">
+        <router-outlet />
+      </main>
+    </div>
+
+  </div>
+</ng-template>

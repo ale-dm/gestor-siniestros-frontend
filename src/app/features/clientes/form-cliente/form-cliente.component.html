@@ -1,0 +1,58 @@
+
+
+<div class="page-header">
+  <h1 class="page-title">{{ esEdicion ? 'Editar' : 'Nuevo' }} Cliente</h1>
+</div>
+
+<p-card [style]="{'max-width': '640px'}">
+  <form [formGroup]="form" (ngSubmit)="guardar()" class="flex flex-column gap-4">
+
+    <div class="formgrid grid">
+      <div class="field col-12 md:col-6">
+        <label for="nombre">Nombre *</label>
+        <input pInputText id="nombre" formControlName="nombre" class="w-full"
+          [class.ng-invalid]="fieldInvalid('nombre')" />
+        <small class="p-error" *ngIf="fieldInvalid('nombre')">Nombre obligatorio</small>
+      </div>
+
+      <div class="field col-12 md:col-6">
+        <label for="apellidos">Apellidos *</label>
+        <input pInputText id="apellidos" formControlName="apellidos" class="w-full"
+          [class.ng-invalid]="fieldInvalid('apellidos')" />
+        <small class="p-error" *ngIf="fieldInvalid('apellidos')">Apellidos obligatorios</small>
+      </div>
+
+      <div class="field col-12 md:col-6">
+        <label for="dni">DNI *</label>
+        <input pInputText id="dni" formControlName="dni" class="w-full"
+          [class.ng-invalid]="fieldInvalid('dni')" />
+        <small class="p-error" *ngIf="fieldInvalid('dni')">DNI obligatorio</small>
+      </div>
+
+      <div class="field col-12 md:col-6">
+        <label for="email">Email</label>
+        <input pInputText id="email" formControlName="email" class="w-full"
+          [class.ng-invalid]="fieldInvalid('email')" />
+        <small class="p-error" *ngIf="fieldInvalid('email')">Email inválido</small>
+      </div>
+
+      <div class="field col-12 md:col-6">
+        <label for="telefono">Teléfono</label>
+        <input pInputText id="telefono" formControlName="telefono" class="w-full" />
+      </div>
+
+      <div class="field col-12">
+        <label for="direccion">Dirección</label>
+        <input pInputText id="direccion" formControlName="direccion" class="w-full" />
+      </div>
+    </div>
+
+    <div class="flex gap-2 justify-content-end">
+      <p-button label="Cancelar" severity="secondary" [outlined]="true"
+        (onClick)="cancelar()" type="button" />
+      <p-button label="Guardar" icon="pi pi-check"
+        type="submit" [loading]="saving" />
+    </div>
+
+  </form>
+</p-card>

@@ -1,0 +1,65 @@
+
+
+<div class="page-header">
+  <h1 class="page-title">{{ esEdicion ? 'Editar' : 'Nueva' }} Póliza</h1>
+</div>
+
+<p-card [style]="{'max-width': '680px'}">
+  <form [formGroup]="form" (ngSubmit)="guardar()" class="flex flex-column gap-4">
+    <div class="formgrid grid">
+
+      <div class="field col-12 md:col-6">
+        <label>Tipo *</label>
+        <p-dropdown [options]="tipos" formControlName="tipo"
+          placeholder="Selecciona tipo" styleClass="w-full"
+          [class.ng-invalid]="fieldInvalid('tipo')" />
+        <small class="p-error" *ngIf="fieldInvalid('tipo')">Requerido</small>
+      </div>
+
+      <div class="field col-12 md:col-6">
+        <label>Cliente *</label>
+        <p-dropdown [options]="clientes" formControlName="clienteId"
+          placeholder="Selecciona cliente" styleClass="w-full" [filter]="true"
+          [class.ng-invalid]="fieldInvalid('clienteId')" />
+        <small class="p-error" *ngIf="fieldInvalid('clienteId')">Requerido</small>
+      </div>
+
+      <div class="field col-12 md:col-6">
+        <label>Fecha inicio *</label>
+        <p-calendar formControlName="fechaInicio" styleClass="w-full"
+          dateFormat="yy-mm-dd" [showIcon]="true" />
+      </div>
+
+      <div class="field col-12 md:col-6">
+        <label>Fecha vencimiento *</label>
+        <p-calendar formControlName="fechaVencimiento" styleClass="w-full"
+          dateFormat="yy-mm-dd" [showIcon]="true" />
+      </div>
+
+      <div class="field col-12 md:col-6">
+        <label>Cobertura máxima (€) *</label>
+        <p-inputNumber formControlName="coberturaMaxima" styleClass="w-full"
+          mode="currency" currency="EUR" locale="es-ES"
+          [class.ng-invalid]="fieldInvalid('coberturaMaxima')" />
+        <small class="p-error" *ngIf="fieldInvalid('coberturaMaxima')">Requerido</small>
+      </div>
+
+      <div class="field col-12 md:col-6">
+        <label>Prima mensual (€)</label>
+        <p-inputNumber formControlName="primaMensual" styleClass="w-full"
+          mode="currency" currency="EUR" locale="es-ES" />
+      </div>
+
+      <div class="field col-12">
+        <label>Descripción</label>
+        <input pInputText formControlName="descripcion" class="w-full" maxlength="500" />
+      </div>
+
+    </div>
+
+    <div class="flex gap-2 justify-content-end">
+      <p-button label="Cancelar" severity="secondary" [outlined]="true" (onClick)="cancelar()" type="button" />
+      <p-button label="Guardar" icon="pi pi-check" type="submit" [loading]="saving" />
+    </div>
+  </form>
+</p-card>

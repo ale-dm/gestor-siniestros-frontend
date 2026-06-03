@@ -1,0 +1,74 @@
+
+<div class="page-header">
+  <h1 class="page-title">Clientes</h1>
+  <p-button label="Nuevo cliente" icon="pi pi-plus" routerLink="/clientes/nuevo" />
+</div>
+
+<p-card>
+  <div class="mb-3">
+    <p-iconField iconPosition="left">
+      <p-inputIcon styleClass="pi pi-search" />
+      <input
+        pInputText
+        type="text"
+        placeholder="Buscar por nombre, apellidos o DNI..."
+        (input)="onSearch($any($event.target).value)"
+        style="width: 320px"
+      />
+    </p-iconField>
+  </div>
+
+  <p-table
+    [value]="clientes"
+    [lazy]="true"
+    [paginator]="true"
+    [rows]="size"
+    [totalRecords]="totalRecords"
+    [loading]="loading"
+    (onLazyLoad)="onPage($event)"
+    [rowsPerPageOptions]="[10, 25, 50]"
+    styleClass="p-datatable-sm p-datatable-gridlines"
+  >
+    <ng-template pTemplate="header">
+      <tr>
+        <th>Nombre</th>
+        <th>DNI</th>
+        <th>Email</th>
+        <th>Teléfono</th>
+        <th>Estado</th>
+        <th style="width:120px">Acciones</th>
+      </tr>
+    </ng-template>
+
+    <ng-template pTemplate="body" let-c>
+      <tr>
+        <td>{{ c.apellidos }}, {{ c.nombre }}</td>
+        <td>{{ c.dni }}</td>
+        <td>{{ c.email }}</td>
+        <td>{{ c.telefono }}</td>
+        <td>
+          <p-tag
+            [value]="c.activo ? 'Activo' : 'Inactivo'"
+            [severity]="c.activo ? 'success' : 'danger'"
+          />
+        </td>
+        <td>
+          <p-button icon="pi pi-pencil" [rounded]="true" [text]="true" severity="info"
+            (onClick)="editar(c.id)" pTooltip="Editar" tooltipPosition="top" />
+          <p-button icon="pi pi-ban" [rounded]="true" [text]="true" severity="danger"
+            (onClick)="confirmarDesactivar(c)" pTooltip="Desactivar" tooltipPosition="top"
+            *ngIf="c.activo" />
+        </td>
+      </tr>
+    </ng-template>
+
+    <ng-template pTemplate="emptymessage">
+      <tr>
+        <td colspan="6">
+          <app-empty-state icon="pi pi-users" title="No se encontraron clientes"
+            subtitle="Prueba con otro término de búsqueda o crea un nuevo cliente" />
+        </td>
+      </tr>
+    </ng-template>
+  </p-table>
+</p-card>

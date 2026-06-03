@@ -1,0 +1,33 @@
+# Compiled output
+/dist
+/tmp
+/out-tsc
+
+# Angular cache
+/.angular
+
+# Node
+/node_modules
+npm-debug.log
+yarn-error.log
+
+# IDEs
+.idea/
+*.sublime-workspace
+
+# VS Code (mantiene config del proyecto)
+.vscode/*
+!.vscode/settings.json
+!.vscode/tasks.json
+!.vscode/launch.json
+!.vscode/extensions.json
+
+# Claude preview config (local)
+.claude/
+
+# Tests
+/coverage
+
+# OS
+.DS_Store
+Thumbs.db

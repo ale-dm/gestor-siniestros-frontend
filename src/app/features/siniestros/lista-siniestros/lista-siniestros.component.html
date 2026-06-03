@@ -1,0 +1,51 @@
+
+
+<div class="page-header">
+  <h1 class="page-title">Siniestros</h1>
+  <p-button label="Nuevo siniestro" icon="pi pi-plus" routerLink="/siniestros/nuevo" />
+</div>
+
+<p-card>
+  <div class="flex gap-3 mb-3">
+    <p-dropdown [options]="estados" [(ngModel)]="filtroEstado" (onChange)="cargar()"
+      placeholder="Estado" styleClass="w-12rem" />
+  </div>
+
+  <p-table [value]="siniestros" [lazy]="true" [paginator]="true" [rows]="size"
+    [totalRecords]="totalRecords" [loading]="loading" (onLazyLoad)="onPage($event)"
+    styleClass="p-datatable-sm p-datatable-gridlines" [rowHover]="true">
+    <ng-template pTemplate="header">
+      <tr>
+        <th>Número</th>
+        <th>Póliza</th>
+        <th>Estado</th>
+        <th>Perito</th>
+        <th>Importe reclamado</th>
+        <th>Fecha apertura</th>
+        <th style="width:80px">Ver</th>
+      </tr>
+    </ng-template>
+    <ng-template pTemplate="body" let-s>
+      <tr (click)="verDetalle(s.id)" style="cursor:pointer">
+        <td><code>{{ s.numeroSiniestro }}</code></td>
+        <td>{{ s.poliza?.numeroPoliza }}</td>
+        <td><p-tag [value]="etiqueta(s.estado)" [severity]="severidad(s.estado)" /></td>
+        <td>{{ s.perito ? s.perito.nombre + ' ' + s.perito.apellidos : '—' }}</td>
+        <td>{{ s.importeReclamado | currency:'EUR':'symbol':'1.2-2':'es' }}</td>
+        <td>{{ s.fechaApertura | date:'dd/MM/yyyy' }}</td>
+        <td>
+          <p-button icon="pi pi-eye" [rounded]="true" [text]="true"
+            (onClick)="verDetalle(s.id); $event.stopPropagation()" />
+        </td>
+      </tr>
+    </ng-template>
+    <ng-template pTemplate="emptymessage">
+      <tr>
+        <td colspan="7">
+          <app-empty-state icon="pi pi-exclamation-triangle" title="No se encontraron siniestros"
+            subtitle="Cambia el filtro de estado o abre un nuevo siniestro" />
+        </td>
+      </tr>
+    </ng-template>
+  </p-table>
+</p-card>

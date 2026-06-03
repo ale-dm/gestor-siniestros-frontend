@@ -1,0 +1,253 @@
+@import "primeicons/primeicons.css";
+@import "primeflex/primeflex.css";
+
+/* ── Tokens de diseño ────────────────────── */
+:root {
+  --brand-green:      #22c55e;
+  --brand-green-dim:  rgba(34, 197, 94, 0.12);
+  --brand-green-mid:  rgba(34, 197, 94, 0.25);
+  --sidebar-bg:       #0d1117;
+  --sidebar-border:   rgba(255, 255, 255, 0.06);
+  --content-bg:       #0f1219;
+  --card-bg:          #161b25;
+  --card-border:      rgba(255, 255, 255, 0.07);
+  --text-primary:     #f0f4f8;
+  --text-secondary:   rgba(240, 244, 248, 0.5);
+  --text-muted:       rgba(240, 244, 248, 0.3);
+  --radius-card:      12px;
+  --radius-sm:        8px;
+  --shadow-card:      0 1px 3px rgba(0,0,0,0.4), 0 4px 16px rgba(0,0,0,0.25);
+  --shadow-hover:     0 4px 20px rgba(0,0,0,0.5);
+}
+
+/* ── Base ────────────────────────────────── */
+*, *::before, *::after { box-sizing: border-box; margin: 0; padding: 0; }
+
+html, body {
+  height: 100%;
+  font-family: 'Inter', -apple-system, BlinkMacSystemFont, 'Segoe UI', sans-serif;
+  background: var(--content-bg);
+  color: var(--text-primary);
+  font-size: 14px;
+  line-height: 1.5;
+  -webkit-font-smoothing: antialiased;
+}
+
+/* ── Scrollbar ───────────────────────────── */
+::-webkit-scrollbar { width: 6px; height: 6px; }
+::-webkit-scrollbar-track { background: transparent; }
+::-webkit-scrollbar-thumb { background: rgba(255,255,255,0.12); border-radius: 3px; }
+::-webkit-scrollbar-thumb:hover { background: rgba(255,255,255,0.2); }
+
+/* ── Utilidades de página ────────────────── */
+.page-header {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  margin-bottom: 1.75rem;
+}
+
+.page-title {
+  font-size: 1.4rem;
+  font-weight: 700;
+  color: var(--text-primary);
+  letter-spacing: -0.02em;
+
+  &::after {
+    content: '';
+    display: block;
+    width: 32px;
+    height: 3px;
+    background: var(--brand-green);
+    border-radius: 2px;
+    margin-top: 6px;
+  }
+
+  @media (max-width: 767px) { font-size: 1.2rem; }
+}
+
+/* ── Responsive utilidades ───────────────── */
+@media (max-width: 767px) {
+  .page-header { flex-wrap: wrap; gap: 0.75rem; }
+  .hide-mobile { display: none !important; }
+}
+
+/* ── Cards PrimeNG ───────────────────────── */
+.p-card {
+  background: var(--card-bg) !important;
+  border: 1px solid var(--card-border) !important;
+  border-radius: var(--radius-card) !important;
+  box-shadow: var(--shadow-card) !important;
+
+  .p-card-header { border-bottom: 1px solid var(--card-border); padding-bottom: 1rem; margin-bottom: 0; }
+  .p-card-title { font-size: 0.9rem; font-weight: 600; color: var(--text-primary); letter-spacing: 0.02em; text-transform: uppercase; }
+  .p-card-content { padding: 0; }
+  .p-card-body { padding: 1.25rem 1.5rem; }
+}
+
+/* ── Tablas PrimeNG ──────────────────────── */
+.p-datatable {
+  .p-datatable-thead > tr > th {
+    background: transparent !important;
+    border: none !important;
+    border-bottom: 1px solid var(--card-border) !important;
+    color: var(--text-secondary) !important;
+    font-size: 0.7rem !important;
+    font-weight: 600 !important;
+    text-transform: uppercase !important;
+    letter-spacing: 0.08em !important;
+    padding: 0.75rem 1rem !important;
+  }
+
+  .p-datatable-tbody > tr {
+    background: transparent !important;
+    border: none !important;
+    border-bottom: 1px solid rgba(255,255,255,0.04) !important;
+    transition: background 0.15s ease;
+
+    > td {
+      border: none !important;
+      padding: 0.85rem 1rem !important;
+      color: var(--text-primary) !important;
+      font-size: 0.875rem !important;
+    }
+
+    &:hover > td { background: rgba(255,255,255,0.03) !important; }
+    &:last-child { border-bottom: none !important; }
+  }
+
+  .p-paginator {
+    background: transparent !important;
+    border: none !important;
+    border-top: 1px solid var(--card-border) !important;
+    padding: 0.75rem 0 0 !important;
+    margin-top: 0.5rem !important;
+  }
+}
+
+/* ── Tags / badges ───────────────────────── */
+.p-tag {
+  font-size: 0.7rem !important;
+  font-weight: 600 !important;
+  letter-spacing: 0.06em !important;
+  border-radius: 6px !important;
+  padding: 0.2rem 0.65rem !important;
+}
+
+/* ── Inputs ──────────────────────────────── */
+.p-inputtext,
+input[pInputText] {
+  background: rgba(255,255,255,0.04) !important;
+  border: 1px solid rgba(255,255,255,0.1) !important;
+  border-radius: var(--radius-sm) !important;
+  color: var(--text-primary) !important;
+  font-size: 0.875rem !important;
+  transition: border-color 0.15s, box-shadow 0.15s;
+
+  &:focus {
+    border-color: var(--brand-green) !important;
+    box-shadow: 0 0 0 3px var(--brand-green-dim) !important;
+    outline: none !important;
+  }
+
+  &::placeholder { color: var(--text-muted) !important; }
+}
+
+/* ── Dropdowns ───────────────────────────── */
+.p-dropdown {
+  background: rgba(255,255,255,0.04) !important;
+  border: 1px solid rgba(255,255,255,0.1) !important;
+  border-radius: var(--radius-sm) !important;
+
+  &.p-focus { border-color: var(--brand-green) !important; box-shadow: 0 0 0 3px var(--brand-green-dim) !important; }
+  .p-dropdown-label { color: var(--text-primary) !important; font-size: 0.875rem !important; }
+  .p-dropdown-panel { background: #1a2030 !important; border: 1px solid var(--card-border) !important; border-radius: var(--radius-sm) !important; }
+  .p-dropdown-item { color: var(--text-primary) !important; font-size: 0.875rem !important; }
+  .p-dropdown-item:hover { background: rgba(255,255,255,0.06) !important; }
+  .p-dropdown-item.p-highlight { background: var(--brand-green-dim) !important; color: var(--brand-green) !important; }
+}
+
+/* ── Botones ─────────────────────────────── */
+.p-button {
+  border-radius: var(--radius-sm) !important;
+  font-size: 0.875rem !important;
+  font-weight: 500 !important;
+  letter-spacing: 0.01em !important;
+  transition: all 0.15s ease !important;
+
+  &.p-button-success,
+  &:not(.p-button-text):not(.p-button-outlined):not([severity]) {
+    background: var(--brand-green) !important;
+    border-color: var(--brand-green) !important;
+    color: #0a0f16 !important;
+    font-weight: 600 !important;
+
+    &:hover { background: #16a34a !important; border-color: #16a34a !important; box-shadow: 0 4px 12px rgba(34,197,94,0.3) !important; }
+  }
+
+  &.p-button-text { background: transparent !important; }
+  &.p-button-outlined { background: transparent !important; }
+}
+
+/* ── Diálogos ────────────────────────────── */
+.p-dialog {
+  background: #161b25 !important;
+  border: 1px solid var(--card-border) !important;
+  border-radius: var(--radius-card) !important;
+  box-shadow: 0 20px 60px rgba(0,0,0,0.6) !important;
+
+  .p-dialog-header {
+    background: transparent !important;
+    border-bottom: 1px solid var(--card-border) !important;
+    padding: 1.25rem 1.5rem !important;
+    font-weight: 600 !important;
+    font-size: 0.95rem !important;
+  }
+
+  .p-dialog-content { background: transparent !important; padding: 1.5rem !important; }
+  .p-dialog-footer { background: transparent !important; border-top: 1px solid var(--card-border) !important; padding: 1rem 1.5rem !important; }
+}
+
+/* ── Timeline ────────────────────────────── */
+.p-timeline .p-timeline-event-connector { background: var(--card-border) !important; }
+.p-timeline .p-timeline-event-marker { border-color: var(--brand-green) !important; background: var(--brand-green-dim) !important; }
+
+/* ── Form fields ─────────────────────────── */
+.field {
+  display: flex;
+  flex-direction: column;
+  gap: 6px;
+
+  label {
+    font-size: 0.75rem;
+    font-weight: 600;
+    color: var(--text-secondary);
+    text-transform: uppercase;
+    letter-spacing: 0.06em;
+  }
+}
+
+.p-error { font-size: 0.75rem !important; }
+
+/* ── Code elements ───────────────────────── */
+code {
+  font-family: 'JetBrains Mono', 'Fira Code', monospace;
+  font-size: 0.8rem;
+  background: rgba(255,255,255,0.06);
+  padding: 2px 8px;
+  border-radius: 4px;
+  color: var(--brand-green);
+  letter-spacing: 0.02em;
+}
+
+/* ── Toast ───────────────────────────────── */
+.p-toast .p-toast-message {
+  border-radius: var(--radius-sm) !important;
+  border: 1px solid var(--card-border) !important;
+}
+
+/* ── IconField ───────────────────────────── */
+.p-iconfield .p-input-icon { color: var(--text-muted) !important; }
+
+/* ── Overlay mask ────────────────────────── */
+.p-component-overlay { background: rgba(0,0,0,0.6) !important; backdrop-filter: blur(4px) !important; }

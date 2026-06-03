@@ -1,0 +1,59 @@
+
+
+<div class="page-header">
+  <h1 class="page-title">Pólizas</h1>
+  <p-button label="Nueva póliza" icon="pi pi-plus" routerLink="/polizas/nueva" />
+</div>
+
+<p-card>
+  <div class="flex gap-3 mb-3">
+    <p-dropdown [options]="estados" [(ngModel)]="filtroEstado" (onChange)="cargar()"
+      placeholder="Estado" styleClass="w-10rem" />
+    <p-dropdown [options]="tipos" [(ngModel)]="filtroTipo" (onChange)="cargar()"
+      placeholder="Tipo" styleClass="w-10rem" />
+  </div>
+
+  <p-table [value]="polizas" [lazy]="true" [paginator]="true" [rows]="size"
+    [totalRecords]="totalRecords" [loading]="loading" (onLazyLoad)="onPage($event)"
+    styleClass="p-datatable-sm p-datatable-gridlines">
+    <ng-template pTemplate="header">
+      <tr>
+        <th>Número</th>
+        <th>Cliente</th>
+        <th>Tipo</th>
+        <th>Estado</th>
+        <th>Cobertura</th>
+        <th>Vencimiento</th>
+        <th style="width:140px">Acciones</th>
+      </tr>
+    </ng-template>
+    <ng-template pTemplate="body" let-p>
+      <tr>
+        <td><code>{{ p.numeroPoliza }}</code></td>
+        <td>{{ p.cliente?.apellidos }}, {{ p.cliente?.nombre }}</td>
+        <td>{{ p.tipo }}</td>
+        <td><p-tag [value]="p.estado" [severity]="severidadEstado(p.estado)" /></td>
+        <td>{{ p.coberturaMaxima | currency:'EUR':'symbol':'1.0-0':'es' }}</td>
+        <td>{{ p.fechaVencimiento | date:'dd/MM/yyyy' }}</td>
+        <td>
+          <p-button icon="pi pi-pencil" [rounded]="true" [text]="true" severity="info"
+            (onClick)="editar(p.id)" pTooltip="Editar" tooltipPosition="top" />
+          <p-button icon="pi pi-pause" [rounded]="true" [text]="true" severity="warn"
+            (onClick)="cambiarEstado(p, 'SUSPENDIDA')" pTooltip="Suspender"
+            *ngIf="p.estado === 'ACTIVA'" tooltipPosition="top" />
+          <p-button icon="pi pi-times" [rounded]="true" [text]="true" severity="danger"
+            (onClick)="cambiarEstado(p, 'CANCELADA')" pTooltip="Cancelar"
+            *ngIf="p.estado !== 'CANCELADA'" tooltipPosition="top" />
+        </td>
+      </tr>
+    </ng-template>
+    <ng-template pTemplate="emptymessage">
+      <tr>
+        <td colspan="7">
+          <app-empty-state icon="pi pi-file" title="No se encontraron pólizas"
+            subtitle="Cambia los filtros o crea una nueva póliza" />
+        </td>
+      </tr>
+    </ng-template>
+  </p-table>
+</p-card>

@@ -1,0 +1,37 @@
+
+
+<div class="page-header">
+  <h1 class="page-title">Nuevo Siniestro</h1>
+</div>
+
+<p-card [style]="{'max-width': '640px'}">
+  <form [formGroup]="form" (ngSubmit)="guardar()" class="flex flex-column gap-4">
+
+    <div class="field">
+      <label>Póliza *</label>
+      <p-dropdown [options]="polizas" formControlName="polizaId"
+        placeholder="Selecciona póliza activa" styleClass="w-full" [filter]="true"
+        [class.ng-invalid]="fieldInvalid('polizaId')" />
+      <small class="p-error" *ngIf="fieldInvalid('polizaId')">Requerido</small>
+    </div>
+
+    <div class="field">
+      <label>Descripción *</label>
+      <textarea pTextarea formControlName="descripcion" rows="4" class="w-full"
+        placeholder="Describe el siniestro..."
+        [class.ng-invalid]="fieldInvalid('descripcion')"></textarea>
+      <small class="p-error" *ngIf="fieldInvalid('descripcion')">Requerido</small>
+    </div>
+
+    <div class="field">
+      <label>Importe reclamado (€)</label>
+      <p-inputNumber formControlName="importeReclamado" styleClass="w-full"
+        mode="currency" currency="EUR" locale="es-ES" />
+    </div>
+
+    <div class="flex gap-2 justify-content-end">
+      <p-button label="Cancelar" severity="secondary" [outlined]="true" (onClick)="cancelar()" type="button" />
+      <p-button label="Abrir siniestro" icon="pi pi-exclamation-triangle" type="submit" [loading]="saving" />
+    </div>
+  </form>
+</p-card>

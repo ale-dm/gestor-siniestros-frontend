@@ -1,4 +1,4 @@
 export const environment = {
   production: true,
-  apiUrl: 'https://tu-backend.railway.app/api'
+  apiUrl: 'https://gestor-siniestros-backend-production.up.railway.app/api'
 };

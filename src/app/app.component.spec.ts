@@ -1,35 +1,37 @@
 import { TestBed } from '@angular/core/testing';
-import { RouterModule } from '@angular/router';
+import { RouterTestingModule } from '@angular/router/testing';
+import { HttpClientTestingModule } from '@angular/common/http/testing';
+import { NO_ERRORS_SCHEMA } from '@angular/core';
 import { AppComponent } from './app.component';
+import { AuthService } from './core/services/auth.service';
 
 describe('AppComponent', () => {
   beforeEach(async () => {
     await TestBed.configureTestingModule({
-      imports: [
-        RouterModule.forRoot([])
-      ],
-      declarations: [
-        AppComponent
-      ],
+      imports: [RouterTestingModule, HttpClientTestingModule],
+      declarations: [AppComponent],
+      providers: [AuthService],
+      schemas: [NO_ERRORS_SCHEMA]
     }).compileComponents();
   });
 
-  it('should create the app', () => {
+  it('debería crearse correctamente', () => {
     const fixture = TestBed.createComponent(AppComponent);
     const app = fixture.componentInstance;
     expect(app).toBeTruthy();
   });
 
-  it(`should have as title 'frontend'`, () => {
+  it('debería detectar la ruta de login correctamente', () => {
     const fixture = TestBed.createComponent(AppComponent);
     const app = fixture.componentInstance;
-    expect(app.title).toEqual('frontend');
+    expect(app.isLoginPage).toBeFalse();
   });
 
-  it('should render title', () => {
+  it('debería tener los navItems definidos', () => {
     const fixture = TestBed.createComponent(AppComponent);
-    fixture.detectChanges();
-    const compiled = fixture.nativeElement as HTMLElement;
-    expect(compiled.querySelector('h1')?.textContent).toContain('Hello, frontend');
+    const app = fixture.componentInstance;
+    expect(app.navItems.length).toBe(4);
+    expect(app.navItems.map(i => i.route)).toContain('/dashboard');
+    expect(app.navItems.map(i => i.route)).toContain('/siniestros');
   });
 });

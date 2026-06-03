@@ -1,0 +1,62 @@
+<div class="page-header">
+  <h1 class="page-title">Nuevo Usuario</h1>
+</div>
+
+<p-card [style]="{'max-width': '580px'}">
+  <form [formGroup]="form" (ngSubmit)="guardar()" class="flex flex-column gap-4">
+    <div class="formgrid grid">
+
+      <div class="field col-12 md:col-6">
+        <label>Username *</label>
+        <input pInputText formControlName="username" class="w-full"
+          [class.ng-invalid]="fieldInvalid('username')" placeholder="ej: jgarcia" />
+        <small class="p-error" *ngIf="fieldInvalid('username')">Mínimo 3 caracteres</small>
+      </div>
+
+      <div class="field col-12 md:col-6">
+        <label>Contraseña *</label>
+        <p-password formControlName="password" styleClass="w-full" inputStyleClass="w-full"
+          [feedback]="true" [toggleMask]="true"
+          [class.ng-invalid]="fieldInvalid('password')" />
+        <small class="p-error" *ngIf="fieldInvalid('password')">Mínimo 6 caracteres</small>
+      </div>
+
+      <div class="field col-12 md:col-6">
+        <label>Nombre *</label>
+        <input pInputText formControlName="nombre" class="w-full"
+          [class.ng-invalid]="fieldInvalid('nombre')" />
+        <small class="p-error" *ngIf="fieldInvalid('nombre')">Requerido</small>
+      </div>
+
+      <div class="field col-12 md:col-6">
+        <label>Apellidos *</label>
+        <input pInputText formControlName="apellidos" class="w-full"
+          [class.ng-invalid]="fieldInvalid('apellidos')" />
+        <small class="p-error" *ngIf="fieldInvalid('apellidos')">Requerido</small>
+      </div>
+
+      <div class="field col-12 md:col-8">
+        <label>Email *</label>
+        <input pInputText formControlName="email" class="w-full" type="email"
+          [class.ng-invalid]="fieldInvalid('email')" />
+        <small class="p-error" *ngIf="fieldInvalid('email')">Email inválido</small>
+      </div>
+
+      <div class="field col-12 md:col-4">
+        <label>Rol *</label>
+        <p-dropdown [options]="roles" formControlName="rol" styleClass="w-full"
+          placeholder="Selecciona rol"
+          [class.ng-invalid]="fieldInvalid('rol')" />
+        <small class="p-error" *ngIf="fieldInvalid('rol')">Requerido</small>
+      </div>
+
+    </div>
+
+    <div class="flex gap-2 justify-content-end">
+      <p-button label="Cancelar" severity="secondary" [outlined]="true"
+        (onClick)="cancelar()" type="button" />
+      <p-button label="Crear usuario" icon="pi pi-user-plus"
+        type="submit" [loading]="saving" />
+    </div>
+  </form>
+</p-card>

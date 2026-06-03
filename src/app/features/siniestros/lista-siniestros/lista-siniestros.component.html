@@ -2,7 +2,11 @@
 
 <div class="page-header">
   <h1 class="page-title">Siniestros</h1>
-  <p-button label="Nuevo siniestro" icon="pi pi-plus" routerLink="/siniestros/nuevo" />
+  <div class="flex gap-2">
+    <p-button label="Exportar CSV" icon="pi pi-download" severity="secondary" [outlined]="true"
+      (onClick)="exportarCSV()" [loading]="exportando" pTooltip="Exporta los siniestros filtrados" />
+    <p-button label="Nuevo siniestro" icon="pi pi-plus" routerLink="/siniestros/nuevo" />
+  </div>
 </div>
 
 <p-card>

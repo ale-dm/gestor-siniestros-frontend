@@ -15,3 +15,23 @@ export interface UsuarioResumen {
   apellidos: string;
   rol: Rol;
 }
+
+export interface Usuario {
+  id: number;
+  username: string;
+  nombre: string;
+  apellidos: string;
+  email: string;
+  rol: Rol;
+  activo: boolean;
+  createdAt: string;
+}
+
+export interface UsuarioRequest {
+  username: string;
+  password: string;
+  nombre: string;
+  apellidos: string;
+  email: string;
+  rol: Rol;
+}

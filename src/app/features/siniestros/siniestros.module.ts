@@ -18,6 +18,7 @@ import { TimelineModule } from 'primeng/timeline';
 import { DividerModule } from 'primeng/divider';
 import { ConfirmDialogModule } from 'primeng/confirmdialog';
 import { ChipModule } from 'primeng/chip';
+import { TooltipModule } from 'primeng/tooltip';
 import { ConfirmationService, MessageService } from 'primeng/api';
 
 import { ListaSiniestrosComponent } from './lista-siniestros/lista-siniestros.component';
@@ -38,7 +39,7 @@ const routes: Routes = [
     SharedModule,
     TableModule, ButtonModule, TagModule, DropdownModule,
     InputNumberModule, InputTextModule, TextareaModule,
-    CardModule, ToastModule, DialogModule, TimelineModule,
+    CardModule, ToastModule, DialogModule, TimelineModule, TooltipModule,
     DividerModule, ConfirmDialogModule, ChipModule
   ],
   providers: []

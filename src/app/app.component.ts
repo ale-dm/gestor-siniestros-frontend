@@ -14,12 +14,20 @@ export class AppComponent implements OnInit {
   sidebarOpen = false;
   isMobile = false;
 
-  navItems = [
-    { label: 'Dashboard',  icon: 'pi pi-home',                   route: '/dashboard' },
-    { label: 'Siniestros', icon: 'pi pi-exclamation-triangle',   route: '/siniestros' },
-    { label: 'Clientes',   icon: 'pi pi-users',                  route: '/clientes' },
-    { label: 'Pólizas',   icon: 'pi pi-file',                    route: '/polizas' },
+  allNavItems = [
+    { label: 'Dashboard',  icon: 'pi pi-home',                   route: '/dashboard',   roles: null },
+    { label: 'Siniestros', icon: 'pi pi-exclamation-triangle',   route: '/siniestros',  roles: null },
+    { label: 'Clientes',   icon: 'pi pi-users',                  route: '/clientes',    roles: null },
+    { label: 'Pólizas',   icon: 'pi pi-file',                    route: '/polizas',     roles: null },
+    { label: 'Usuarios',   icon: 'pi pi-user-edit',              route: '/usuarios',    roles: ['ADMIN'] },
   ];
+
+  get navItems() {
+    const rol = this.auth.getRole();
+    return this.allNavItems.filter(item =>
+      item.roles === null || (rol !== null && item.roles.includes(rol))
+    );
+  }
 
   constructor(public auth: AuthService, private router: Router) {}
 

@@ -1,0 +1,49 @@
+<div class="page-header">
+  <h1 class="page-title">Usuarios</h1>
+  <p-button label="Nuevo usuario" icon="pi pi-plus" routerLink="/usuarios/nuevo" />
+</div>
+
+<p-card>
+  <p-table [value]="usuarios" [loading]="loading"
+    styleClass="p-datatable-sm p-datatable-gridlines" [rowHover]="true">
+    <ng-template pTemplate="header">
+      <tr>
+        <th>Usuario</th>
+        <th>Nombre</th>
+        <th>Email</th>
+        <th>Rol</th>
+        <th>Estado</th>
+        <th style="width:120px">Acciones</th>
+      </tr>
+    </ng-template>
+
+    <ng-template pTemplate="body" let-u>
+      <tr>
+        <td><code>{{ u.username }}</code></td>
+        <td>{{ u.apellidos }}, {{ u.nombre }}</td>
+        <td>{{ u.email }}</td>
+        <td><p-tag [value]="u.rol" [severity]="severidadRol(u.rol)" /></td>
+        <td>
+          <p-tag [value]="u.activo ? 'Activo' : 'Inactivo'"
+                 [severity]="u.activo ? 'success' : 'danger'" />
+        </td>
+        <td>
+          <p-button icon="pi pi-check-circle" [rounded]="true" [text]="true" severity="success"
+            (onClick)="activar(u)" pTooltip="Activar" tooltipPosition="top"
+            *ngIf="!u.activo" />
+          <p-button icon="pi pi-ban" [rounded]="true" [text]="true" severity="danger"
+            (onClick)="confirmarDesactivar(u)" pTooltip="Desactivar" tooltipPosition="top"
+            *ngIf="u.activo" />
+        </td>
+      </tr>
+    </ng-template>
+
+    <ng-template pTemplate="emptymessage">
+      <tr>
+        <td colspan="6">
+          <app-empty-state icon="pi pi-users" title="No hay usuarios" />
+        </td>
+      </tr>
+    </ng-template>
+  </p-table>
+</p-card>

@@ -1,0 +1,123 @@
+<ng-container *ngIf="!loading && cliente">
+
+  <div class="page-header">
+    <div class="flex align-items-center gap-3">
+      <p-button icon="pi pi-arrow-left" [text]="true" severity="secondary" routerLink="/clientes" />
+      <h1 class="page-title mb-0">{{ cliente.apellidos }}, {{ cliente.nombre }}</h1>
+      <p-tag [value]="cliente.activo ? 'Activo' : 'Inactivo'"
+             [severity]="cliente.activo ? 'success' : 'danger'" />
+    </div>
+    <p-button label="Editar" icon="pi pi-pencil" severity="secondary" [outlined]="true"
+      [routerLink]="['/clientes', cliente.id, 'editar']" />
+  </div>
+
+  <div class="grid">
+
+    <!-- Datos personales -->
+    <div class="col-12 lg:col-4">
+      <p-card header="Datos personales" styleClass="h-full">
+        <div class="datos-grid">
+          <div class="dato">
+            <span class="dato-label">DNI</span>
+            <code>{{ cliente.dni }}</code>
+          </div>
+          <div class="dato">
+            <span class="dato-label">Email</span>
+            <span>{{ cliente.email || '—' }}</span>
+          </div>
+          <div class="dato">
+            <span class="dato-label">Teléfono</span>
+            <span>{{ cliente.telefono || '—' }}</span>
+          </div>
+          <div class="dato">
+            <span class="dato-label">Dirección</span>
+            <span>{{ cliente.direccion || '—' }}</span>
+          </div>
+          <div class="dato">
+            <span class="dato-label">Cliente desde</span>
+            <span>{{ cliente.createdAt | date:'dd/MM/yyyy' }}</span>
+          </div>
+        </div>
+
+        <p-divider />
+
+        <!-- KPIs rápidos -->
+        <div class="kpi-mini-grid">
+          <div class="kpi-mini">
+            <span class="kpi-mini-value">{{ cliente.polizasActivas.length }}</span>
+            <span class="kpi-mini-label">Pólizas activas</span>
+          </div>
+          <div class="kpi-mini">
+            <span class="kpi-mini-value">{{ totalSiniestros }}</span>
+            <span class="kpi-mini-label">Siniestros</span>
+          </div>
+        </div>
+      </p-card>
+    </div>
+
+    <!-- Pólizas y siniestros -->
+    <div class="col-12 lg:col-8">
+
+      <div *ngIf="polizas.length === 0" class="flex align-items-center justify-content-center"
+           style="height: 200px">
+        <app-empty-state icon="pi pi-file" title="Sin pólizas activas"
+          subtitle="Este cliente no tiene pólizas activas en este momento" />
+      </div>
+
+      <div class="flex flex-column gap-3" *ngIf="polizas.length > 0">
+        <p-card *ngFor="let poliza of polizas" [styleClass]="'poliza-card'">
+          <ng-template pTemplate="header">
+            <div class="poliza-header">
+              <div class="flex align-items-center gap-2">
+                <code>{{ poliza.numeroPoliza }}</code>
+                <p-tag [value]="poliza.tipo" severity="info" />
+                <p-tag [value]="poliza.estado" [severity]="severidadPoliza(poliza.estado)" />
+              </div>
+              <div class="poliza-meta">
+                <span>Cobertura: <strong>{{ poliza.coberturaMaxima | currency:'EUR':'symbol':'1.0-0':'es' }}</strong></span>
+                <span>Vence: <strong>{{ poliza.fechaVencimiento | date:'dd/MM/yyyy' }}</strong></span>
+              </div>
+            </div>
+          </ng-template>
+
+          <!-- Siniestros de esta póliza -->
+          <div *ngIf="poliza.siniestros && poliza.siniestros.length > 0">
+            <p class="siniestros-titulo">Siniestros ({{ poliza.siniestros.length }})</p>
+            <div class="siniestros-list">
+              <div class="siniestro-row" *ngFor="let s of poliza.siniestros"
+                   (click)="verSiniestro(s.id)">
+                <code class="siniestro-num">{{ s.numeroSiniestro }}</code>
+                <p-tag [value]="etiquetaSiniestro(s.estado)" [severity]="severidadSiniestro(s.estado)" />
+                <span class="siniestro-importe">
+                  {{ s.importeReclamado | currency:'EUR':'symbol':'1.0-0':'es' }}
+                </span>
+                <span class="siniestro-fecha">{{ s.fechaApertura | date:'dd/MM/yyyy' }}</span>
+                <i class="pi pi-chevron-right siniestro-arrow"></i>
+              </div>
+            </div>
+          </div>
+
+          <div *ngIf="!poliza.siniestros || poliza.siniestros.length === 0"
+               class="text-color-secondary text-sm py-2">
+            Sin siniestros registrados en esta póliza
+          </div>
+        </p-card>
+      </div>
+
+    </div>
+  </div>
+
+</ng-container>
+
+<!-- Skeleton de carga -->
+<ng-container *ngIf="loading">
+  <div class="grid">
+    <div class="col-12 lg:col-4">
+      <p-skeleton height="300px" borderRadius="12px" />
+    </div>
+    <div class="col-12 lg:col-8">
+      <p-skeleton height="200px" borderRadius="12px" styleClass="mb-3" />
+      <p-skeleton height="200px" borderRadius="12px" />
+    </div>
+  </div>
+</ng-container>

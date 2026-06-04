@@ -26,7 +26,7 @@ export class ListaClientesComponent implements OnInit {
     private clienteService: ClienteService,
     private confirmationService: ConfirmationService,
     private toast: ToastService,
-    private router: Router
+    public router: Router
   ) {}
 
   ngOnInit(): void {

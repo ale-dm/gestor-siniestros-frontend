@@ -1,0 +1,105 @@
+/* Datos personales */
+.datos-grid {
+  display: flex;
+  flex-direction: column;
+  gap: 0.85rem;
+}
+
+.dato {
+  display: flex;
+  flex-direction: column;
+  gap: 2px;
+}
+
+.dato-label {
+  font-size: 0.68rem;
+  font-weight: 600;
+  text-transform: uppercase;
+  letter-spacing: 0.07em;
+  color: var(--text-secondary);
+}
+
+/* KPIs mini */
+.kpi-mini-grid {
+  display: grid;
+  grid-template-columns: 1fr 1fr;
+  gap: 1rem;
+  margin-top: 0.5rem;
+}
+
+.kpi-mini {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  padding: 0.75rem;
+  background: rgba(255,255,255,0.03);
+  border-radius: 8px;
+  border: 1px solid var(--card-border);
+}
+
+.kpi-mini-value {
+  font-size: 1.6rem;
+  font-weight: 700;
+  color: var(--brand-green);
+  line-height: 1;
+}
+
+.kpi-mini-label {
+  font-size: 0.7rem;
+  color: var(--text-secondary);
+  margin-top: 4px;
+}
+
+/* Pólizas */
+.poliza-header {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  flex-wrap: wrap;
+  gap: 0.5rem;
+  padding: 1rem 1.5rem;
+  border-bottom: 1px solid var(--card-border);
+}
+
+.poliza-meta {
+  display: flex;
+  gap: 1.25rem;
+  font-size: 0.8rem;
+  color: var(--text-secondary);
+
+  strong { color: var(--text-primary); }
+}
+
+/* Siniestros dentro de póliza */
+.siniestros-titulo {
+  font-size: 0.72rem;
+  font-weight: 600;
+  text-transform: uppercase;
+  letter-spacing: 0.07em;
+  color: var(--text-secondary);
+  margin-bottom: 0.5rem;
+}
+
+.siniestros-list {
+  display: flex;
+  flex-direction: column;
+}
+
+.siniestro-row {
+  display: flex;
+  align-items: center;
+  gap: 1rem;
+  padding: 0.7rem 0.5rem;
+  border-bottom: 1px solid rgba(255,255,255,0.04);
+  cursor: pointer;
+  border-radius: 6px;
+  transition: background 0.15s;
+
+  &:hover { background: rgba(255,255,255,0.03); }
+  &:last-child { border-bottom: none; }
+}
+
+.siniestro-num  { flex: 0 0 130px; }
+.siniestro-importe { margin-left: auto; font-size: 0.85rem; font-weight: 600; }
+.siniestro-fecha   { font-size: 0.78rem; color: var(--text-secondary); flex: 0 0 90px; text-align: right; }
+.siniestro-arrow   { color: var(--text-muted); font-size: 0.7rem; margin-left: 0.25rem; }

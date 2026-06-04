@@ -13,27 +13,31 @@ import { ToastModule } from 'primeng/toast';
 import { CardModule } from 'primeng/card';
 import { IconFieldModule } from 'primeng/iconfield';
 import { InputIconModule } from 'primeng/inputicon';
-import { ConfirmationService, MessageService } from 'primeng/api';
+import { DividerModule } from 'primeng/divider';
+import { SkeletonModule } from 'primeng/skeleton';
+import { TooltipModule } from 'primeng/tooltip';
 
 import { ListaClientesComponent } from './lista-clientes/lista-clientes.component';
 import { FormClienteComponent } from './form-cliente/form-cliente.component';
+import { DetalleClienteComponent } from './detalle-cliente/detalle-cliente.component';
 
 const routes: Routes = [
   { path: '', component: ListaClientesComponent },
   { path: 'nuevo', component: FormClienteComponent },
+  { path: ':id', component: DetalleClienteComponent },
   { path: ':id/editar', component: FormClienteComponent }
 ];
 
 @NgModule({
-  declarations: [ListaClientesComponent, FormClienteComponent],
+  declarations: [ListaClientesComponent, FormClienteComponent, DetalleClienteComponent],
   imports: [
-    CommonModule,
-    ReactiveFormsModule,
+    CommonModule, ReactiveFormsModule,
     RouterModule.forChild(routes),
     SharedModule,
     TableModule, ButtonModule, InputTextModule, TagModule,
     ConfirmDialogModule, ToastModule, CardModule,
-    IconFieldModule, InputIconModule
+    IconFieldModule, InputIconModule, DividerModule,
+    SkeletonModule, TooltipModule
   ],
   providers: []
 })

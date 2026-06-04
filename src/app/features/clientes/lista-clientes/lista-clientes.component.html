@@ -41,7 +41,7 @@
     </ng-template>
 
     <ng-template pTemplate="body" let-c>
-      <tr>
+      <tr (click)="router.navigate(['/clientes', c.id])" style="cursor:pointer">
         <td>{{ c.apellidos }}, {{ c.nombre }}</td>
         <td>{{ c.dni }}</td>
         <td>{{ c.email }}</td>

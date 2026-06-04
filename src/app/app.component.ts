@@ -3,6 +3,7 @@ import { GlobalSearchComponent } from './shared/components/global-search/global-
 import { Router, NavigationEnd } from '@angular/router';
 import { filter } from 'rxjs/operators';
 import { AuthService } from './core/services/auth.service';
+import { LoadingService } from './core/services/loading.service';
 
 @Component({
   selector: 'app-root',
@@ -32,7 +33,7 @@ export class AppComponent implements OnInit {
     );
   }
 
-  constructor(public auth: AuthService, private router: Router) {}
+  constructor(public auth: AuthService, private router: Router, public loading: LoadingService) {}
 
   ngOnInit(): void {
     this.checkMobile();

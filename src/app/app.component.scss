@@ -245,3 +245,23 @@
 
   @media (max-width: 767px) { padding: 1.25rem 1rem; }
 }
+
+/* ── Barra de progreso global ────────────── */
+.global-progress-bar {
+  height: 2px;
+  background: rgba(34,197,94,0.15);
+  overflow: hidden;
+  flex-shrink: 0;
+}
+
+.global-progress-track {
+  height: 100%;
+  width: 40%;
+  background: linear-gradient(90deg, transparent, var(--brand-green), transparent);
+  animation: progress-slide 1.4s ease-in-out infinite;
+}
+
+@keyframes progress-slide {
+  0%   { transform: translateX(-200%); }
+  100% { transform: translateX(400%); }
+}

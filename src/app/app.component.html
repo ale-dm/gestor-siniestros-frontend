@@ -63,6 +63,11 @@
         <app-global-search *ngIf="!isLoginPage" />
       </header>
 
+      <!-- Barra de progreso global -->
+      <div class="global-progress-bar" *ngIf="loading.loading$ | async">
+        <div class="global-progress-track"></div>
+      </div>
+
       <main class="app-main">
         <router-outlet />
       </main>

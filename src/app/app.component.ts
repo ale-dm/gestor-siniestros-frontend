@@ -1,4 +1,5 @@
-import { Component, HostListener, OnInit } from '@angular/core';
+import { Component, HostListener, OnInit, ViewChild } from '@angular/core';
+import { GlobalSearchComponent } from './shared/components/global-search/global-search.component';
 import { Router, NavigationEnd } from '@angular/router';
 import { filter } from 'rxjs/operators';
 import { AuthService } from './core/services/auth.service';
@@ -9,6 +10,8 @@ import { AuthService } from './core/services/auth.service';
   styleUrl: './app.component.scss'
 })
 export class AppComponent implements OnInit {
+
+  @ViewChild(GlobalSearchComponent) searchComp?: GlobalSearchComponent;
 
   isLoginPage = false;
   sidebarOpen = false;
@@ -41,6 +44,13 @@ export class AppComponent implements OnInit {
         // Cierra el sidebar al navegar en móvil
         if (this.isMobile) this.sidebarOpen = false;
       });
+  }
+
+  @HostListener('window:keydown.control.k', ['$event'])
+  onCtrlK(e: KeyboardEvent): void {
+    if (this.isLoginPage) return;
+    e.preventDefault();
+    this.searchComp?.abrirBusqueda();
   }
 
   @HostListener('window:resize')

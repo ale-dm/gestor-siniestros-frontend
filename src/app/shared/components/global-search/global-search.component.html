@@ -1,0 +1,89 @@
+<div class="search-wrapper">
+
+  <div class="search-input-box" (click)="abrirBusqueda()">
+    <i class="pi pi-search search-icon"></i>
+    <input
+      #inputRef
+      type="text"
+      [(ngModel)]="query"
+      (input)="onInput()"
+      (focus)="mostrarDropdown = query.length >= 2"
+      placeholder="Buscar clientes, pólizas, siniestros..."
+      class="search-input"
+      autocomplete="off"
+    />
+    <span class="search-shortcut" *ngIf="!query">Ctrl+K</span>
+    <i class="pi pi-spinner pi-spin search-loading" *ngIf="cargando"></i>
+    <i class="pi pi-times search-clear" *ngIf="query && !cargando" (click)="cerrar(); $event.stopPropagation()"></i>
+  </div>
+
+  <!-- Dropdown de resultados -->
+  <div class="search-dropdown" *ngIf="mostrarDropdown">
+
+    <!-- Sin resultados -->
+    <div class="search-empty" *ngIf="!cargando && query.length >= 2 && totalResultados === 0">
+      <i class="pi pi-search-minus"></i>
+      <span>Sin resultados para "<strong>{{ query }}</strong>"</span>
+    </div>
+
+    <!-- Escribiendo -->
+    <div class="search-hint" *ngIf="query.length > 0 && query.length < 2">
+      <i class="pi pi-info-circle"></i>
+      <span>Escribe al menos 2 caracteres</span>
+    </div>
+
+    <!-- Resultados agrupados -->
+    <ng-container *ngIf="totalResultados > 0">
+
+      <!-- Clientes -->
+      <div *ngIf="clientes.length > 0">
+        <div class="search-group-label">
+          <i class="pi pi-users"></i> Clientes
+        </div>
+        <div class="search-result" *ngFor="let r of clientes" (click)="navegar(r)">
+          <div class="result-icon resultado-cliente"><i class="pi pi-user"></i></div>
+          <div class="result-body">
+            <span class="result-label">{{ r.label }}</span>
+            <span class="result-sub">{{ r.sublabel }}</span>
+          </div>
+          <i class="pi pi-arrow-right result-arrow"></i>
+        </div>
+      </div>
+
+      <!-- Pólizas -->
+      <div *ngIf="polizas.length > 0">
+        <div class="search-group-label">
+          <i class="pi pi-file"></i> Pólizas
+        </div>
+        <div class="search-result" *ngFor="let r of polizas" (click)="navegar(r)">
+          <div class="result-icon resultado-poliza"><i class="pi pi-file"></i></div>
+          <div class="result-body">
+            <span class="result-label">{{ r.label }}</span>
+            <span class="result-sub">{{ r.sublabel }}</span>
+          </div>
+          <i class="pi pi-arrow-right result-arrow"></i>
+        </div>
+      </div>
+
+      <!-- Siniestros -->
+      <div *ngIf="siniestros.length > 0">
+        <div class="search-group-label">
+          <i class="pi pi-exclamation-triangle"></i> Siniestros
+        </div>
+        <div class="search-result" *ngFor="let r of siniestros" (click)="navegar(r)">
+          <div class="result-icon resultado-siniestro"><i class="pi pi-exclamation-triangle"></i></div>
+          <div class="result-body">
+            <span class="result-label">{{ r.label }}</span>
+            <span class="result-sub">{{ r.sublabel }}</span>
+          </div>
+          <i class="pi pi-arrow-right result-arrow"></i>
+        </div>
+      </div>
+
+    </ng-container>
+  </div>
+
+  <!-- Backdrop para cerrar -->
+  <div class="search-backdrop" *ngIf="mostrarDropdown" (click)="cerrar()"></div>
+
+</div>

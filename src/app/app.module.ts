@@ -16,6 +16,7 @@ import { ToastModule } from 'primeng/toast';
 import { ConfirmDialogModule } from 'primeng/confirmdialog';
 import { MessageService, ConfirmationService } from 'primeng/api';
 
+import { SharedModule } from './shared/shared.module';
 import { AppRoutingModule } from './app-routing.module';
 import { AppComponent } from './app.component';
 import { JwtInterceptor } from './core/interceptors/jwt.interceptor';
@@ -31,6 +32,7 @@ import { ErrorInterceptor } from './core/interceptors/error.interceptor';
     RippleModule,
     ToastModule,
     ConfirmDialogModule,
+    SharedModule,
     AppRoutingModule
   ],
   providers: [

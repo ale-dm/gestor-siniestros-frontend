@@ -9,18 +9,16 @@
 <ng-template #appLayout>
   <div class="app-shell">
 
-    <!-- Backdrop (solo móvil) -->
+    <!-- Backdrop móvil -->
     <div class="sidebar-backdrop"
          [class.visible]="sidebarOpen && isMobile"
-         (click)="closeSidebar()">
-    </div>
+         (click)="closeSidebar()"></div>
 
     <!-- Sidebar -->
     <nav class="app-sidebar" [class.sidebar--open]="sidebarOpen">
       <div class="sidebar-logo">
         <i class="pi pi-shield"></i>
         <span>Siniestros</span>
-        <!-- Botón cerrar en móvil -->
         <button class="sidebar-close" *ngIf="isMobile" (click)="closeSidebar()">
           <i class="pi pi-times"></i>
         </button>
@@ -53,15 +51,16 @@
     <!-- Área principal -->
     <div class="app-content">
 
-      <!-- Topbar (solo móvil) -->
-      <header class="app-topbar" *ngIf="isMobile">
-        <button class="topbar-menu-btn" (click)="toggleSidebar()">
+      <!-- Topbar: buscador en desktop + hamburguesa en móvil -->
+      <header class="app-topbar">
+        <button class="topbar-menu-btn" (click)="toggleSidebar()" *ngIf="isMobile">
           <i class="pi pi-bars"></i>
         </button>
-        <div class="topbar-logo">
+        <div class="topbar-logo" *ngIf="isMobile">
           <i class="pi pi-shield"></i>
           <span>Siniestros</span>
         </div>
+        <app-global-search *ngIf="!isLoginPage" />
       </header>
 
       <main class="app-main">

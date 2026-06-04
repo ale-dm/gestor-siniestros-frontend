@@ -1,110 +1,259 @@
+/* ── Saludo ───────────────────────────────── */
+.dash-greeting {
+  display: flex;
+  align-items: flex-end;
+  justify-content: space-between;
+  margin-bottom: 2rem;
+}
+
+.dash-subtitle {
+  font-size: 0.82rem;
+  color: var(--text-secondary);
+  margin-top: 4px;
+  text-transform: capitalize;
+}
+
 /* ── KPI Cards ───────────────────────────── */
 .kpi-card {
-  display: flex;
-  align-items: center;
-  gap: 1rem;
-  padding: 1.25rem 1.5rem;
   background: var(--card-bg);
   border: 1px solid var(--card-border);
+  border-top: 2px solid var(--kpi-color, var(--brand-green));
   border-radius: var(--radius-card);
+  padding: 1.25rem 1.5rem 1rem;
   box-shadow: var(--shadow-card);
   transition: transform 0.15s ease, box-shadow 0.15s ease;
-  cursor: default;
+  display: flex;
+  flex-direction: column;
+  gap: 0.5rem;
 
   &:hover {
-    transform: translateY(-2px);
-    box-shadow: var(--shadow-hover);
+    transform: translateY(-3px);
+    box-shadow: 0 12px 32px rgba(0,0,0,0.3);
   }
 }
 
-.kpi-icon {
-  width: 48px;
-  height: 48px;
-  border-radius: 12px;
+.kpi-top {
   display: flex;
   align-items: center;
-  justify-content: center;
-  flex-shrink: 0;
-
-  i { font-size: 1.3rem; }
-}
-
-.kpi-body {
-  display: flex;
-  flex-direction: column;
-  gap: 4px;
+  justify-content: space-between;
 }
 
 .kpi-label {
   font-size: 0.72rem;
-  font-weight: 600;
+  font-weight: 700;
+  text-transform: uppercase;
+  letter-spacing: 0.08em;
+  color: var(--text-secondary);
+}
+
+.kpi-badge {
+  width: 32px; height: 32px;
+  border-radius: 8px;
+  display: flex; align-items: center; justify-content: center;
+  i { font-size: 0.9rem; }
+}
+.kpi-badge--blue   { background: rgba(59,130,246,0.12); i { color: #60a5fa; } }
+.kpi-badge--yellow { background: rgba(245,158,11,0.12); i { color: #fbbf24; } }
+.kpi-badge--green  { background: rgba(34,197,94,0.12);  i { color: #4ade80; } }
+.kpi-badge--red    { background: rgba(239,68,68,0.12);  i { color: #f87171; } }
+
+.kpi-number {
+  font-size: 2.5rem;
+  font-weight: 800;
+  color: var(--text-primary);
+  line-height: 1;
+  letter-spacing: -0.04em;
+}
+
+.kpi-bar {
+  height: 3px;
+  background: rgba(255,255,255,0.06);
+  border-radius: 10px;
+  overflow: hidden;
+  margin-top: 2px;
+}
+.kpi-bar-fill {
+  height: 100%;
+  background: var(--kpi-color, var(--brand-green));
+  border-radius: 10px;
+  opacity: 0.7;
+  transition: width 0.6s ease;
+}
+
+.kpi-sub {
+  font-size: 0.72rem;
+  color: var(--text-muted);
+}
+
+/* ── Métricas panel ──────────────────────── */
+.metrics-panel {
+  background: var(--card-bg);
+  border: 1px solid var(--card-border);
+  border-radius: var(--radius-card);
+  padding: 0;
+  box-shadow: var(--shadow-card);
+  height: 100%;
+  display: flex;
+  flex-direction: column;
+}
+
+.metric-item {
+  padding: 1.25rem 1.5rem;
+  display: flex;
+  align-items: flex-start;
+  gap: 1rem;
+  flex: 1;
+}
+
+.metric-divider {
+  height: 1px;
+  background: var(--card-border);
+  margin: 0;
+}
+
+.metric-icon {
+  width: 38px; height: 38px;
+  border-radius: 10px;
+  display: flex; align-items: center; justify-content: center;
+  flex-shrink: 0;
+  i { font-size: 1rem; }
+}
+.metric-icon--teal   { background: rgba(20,184,166,0.12); i { color: #2dd4bf; } }
+.metric-icon--purple { background: rgba(168,85,247,0.12); i { color: #c084fc; } }
+.metric-icon--green  { background: rgba(34,197,94,0.12);  i { color: #4ade80; } }
+
+.metric-body {
+  display: flex;
+  flex-direction: column;
+  gap: 3px;
+  flex: 1;
+}
+.metric-label {
+  font-size: 0.72rem;
+  font-weight: 700;
+  text-transform: uppercase;
+  letter-spacing: 0.07em;
+  color: var(--text-secondary);
+}
+.metric-value {
+  font-size: 1.3rem;
+  font-weight: 700;
+  color: var(--text-primary);
+  letter-spacing: -0.02em;
+}
+
+.tasa-bar {
+  height: 4px;
+  background: rgba(255,255,255,0.06);
+  border-radius: 10px;
+  overflow: hidden;
+  margin-top: 6px;
+  width: 100%;
+}
+.tasa-bar-fill {
+  height: 100%;
+  background: linear-gradient(90deg, var(--brand-green), #16a34a);
+  border-radius: 10px;
+  transition: width 0.8s ease;
+}
+
+/* ── Chart cards ─────────────────────────── */
+.chart-card {
+  background: var(--card-bg);
+  border: 1px solid var(--card-border);
+  border-radius: var(--radius-card);
+  box-shadow: var(--shadow-card);
+  overflow: hidden;
+  display: flex;
+  flex-direction: column;
+}
+
+.chart-card-header {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  padding: 1rem 1.5rem 0.75rem;
+  border-bottom: 1px solid var(--card-border);
+}
+
+.chart-card-title {
+  font-size: 0.78rem;
+  font-weight: 700;
   text-transform: uppercase;
   letter-spacing: 0.07em;
   color: var(--text-secondary);
 }
 
-.kpi-value {
-  font-size: 1.8rem;
-  font-weight: 700;
-  color: var(--text-primary);
-  line-height: 1;
-  letter-spacing: -0.03em;
-
-  &--sm { font-size: 1.25rem; letter-spacing: -0.02em; }
-}
-
-/* ── Colores por tipo de KPI ─────────────── */
-.kpi-blue   .kpi-icon { background: rgba(59,130,246,0.12); i { color: #60a5fa; } }
-.kpi-yellow .kpi-icon { background: rgba(234,179,8,0.12);  i { color: #fbbf24; } }
-.kpi-green  .kpi-icon { background: rgba(34,197,94,0.12);  i { color: #4ade80; } }
-.kpi-red    .kpi-icon { background: rgba(239,68,68,0.12);   i { color: #f87171; } }
-.kpi-teal   .kpi-icon { background: rgba(20,184,166,0.12);  i { color: #2dd4bf; } }
-.kpi-purple .kpi-icon { background: rgba(168,85,247,0.12); i { color: #c084fc; } }
-.kpi-gray   .kpi-icon { background: rgba(255,255,255,0.06); i { color: rgba(240,244,248,0.4); } }
-
-/* ── Gráficas ────────────────────────────── */
-.chart-container {
-  height: 260px;
+.chart-card-link {
+  font-size: 0.75rem;
+  color: var(--brand-green);
+  text-decoration: none;
   display: flex;
   align-items: center;
-  justify-content: center;
+  gap: 0.3rem;
+  opacity: 0.8;
+  transition: opacity 0.15s;
 
-  &--donut { padding: 0.5rem 0; }
+  &:hover { opacity: 1; }
+  i { font-size: 0.65rem; }
 }
 
-/* ── Últimos siniestros ──────────────────── */
-.empty-state {
+.chart-wrap {
+  flex: 1;
+  padding: 1.25rem 1.25rem 0.75rem;
+  min-height: 240px;
+  display: flex;
+  align-items: center;
+
+  ::ng-deep canvas { max-height: 240px; }
+
+  &--donut {
+    min-height: 260px;
+    ::ng-deep canvas { max-height: 220px; }
+  }
+}
+
+/* ── Lista últimos siniestros ────────────── */
+.sin-empty {
   display: flex;
   flex-direction: column;
   align-items: center;
   gap: 0.5rem;
-  padding: 2rem;
+  padding: 2.5rem;
   color: var(--text-muted);
-
-  i { font-size: 2rem; opacity: 0.4; }
-  span { font-size: 0.875rem; }
+  i { font-size: 1.75rem; opacity: 0.3; }
+  span { font-size: 0.85rem; }
 }
 
-.ultimos-list {
-  display: flex;
-  flex-direction: column;
-}
+.sin-list { display: flex; flex-direction: column; padding: 0.25rem 0; }
 
-.ultimos-item {
+.sin-row {
   display: flex;
   align-items: center;
   gap: 1rem;
-  padding: 0.9rem 0.5rem;
-  border-bottom: 1px solid rgba(255,255,255,0.04);
+  padding: 0.85rem 1.5rem;
   cursor: pointer;
-  border-radius: 8px;
-  transition: background 0.15s;
+  transition: background 0.12s;
+  border-bottom: 1px solid rgba(255,255,255,0.03);
 
-  &:hover { background: rgba(255,255,255,0.03); }
+  &:hover { background: rgba(34,197,94,0.03); .sin-arrow { opacity: 1; } }
   &:last-child { border-bottom: none; }
 }
 
-.item-num  { flex: 0 0 140px; }
-.item-importe { margin-left: auto; font-size: 0.875rem; font-weight: 600; color: var(--text-primary); }
-.item-fecha { font-size: 0.8rem; color: var(--text-secondary); flex: 0 0 90px; text-align: right; }
-.item-arrow { color: var(--text-muted); font-size: 0.75rem; margin-left: 0.5rem; }
+.sin-dot {
+  width: 7px; height: 7px;
+  border-radius: 50%;
+  background: #3b82f6;
+  flex-shrink: 0;
+  box-shadow: 0 0 6px rgba(59,130,246,0.5);
+}
+
+.sin-info {
+  flex: 1;
+  display: flex;
+  align-items: center;
+  gap: 1rem;
+}
+.sin-date { font-size: 0.78rem; color: var(--text-secondary); }
+.sin-amount { font-size: 0.875rem; font-weight: 700; color: var(--text-primary); }
+.sin-arrow { font-size: 0.7rem; color: var(--text-muted); opacity: 0; transition: opacity 0.12s; }

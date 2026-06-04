@@ -1,155 +1,187 @@
-<div class="page-header">
-  <h1 class="page-title">Dashboard</h1>
-</div>
-
-<!-- ── Skeletons ── -->
+<!-- Skeletons -->
 <ng-container *ngIf="loading">
-  <div class="grid mb-4">
+  <div class="grid">
     <div class="col-12 md:col-6 lg:col-3" *ngFor="let i of [1,2,3,4]">
-      <div class="kpi-card"><p-skeleton height="90px" borderRadius="12px" /></div>
+      <p-skeleton height="120px" borderRadius="14px" />
     </div>
+  </div>
+  <div class="grid mt-4">
+    <div class="col-12 lg:col-8"><p-skeleton height="320px" borderRadius="14px" /></div>
+    <div class="col-12 lg:col-4"><p-skeleton height="320px" borderRadius="14px" /></div>
   </div>
 </ng-container>
 
-<!-- ── KPI cards ── -->
+<!-- Dashboard real -->
 <ng-container *ngIf="!loading && data">
 
+  <!-- Saludo -->
+  <div class="dash-greeting">
+    <div>
+      <h1 class="page-title">Dashboard</h1>
+      <p class="dash-subtitle">Resumen operativo · {{ today | date:'EEEE, d MMMM yyyy':'':'es' }}</p>
+    </div>
+  </div>
+
+  <!-- ── Fila 1: KPIs de estado ── -->
   <div class="grid mb-4">
 
-    <div class="col-12 md:col-6 lg:col-3">
-      <div class="kpi-card kpi-blue">
-        <div class="kpi-icon"><i class="pi pi-folder-open"></i></div>
-        <div class="kpi-body">
+    <div class="col-12 sm:col-6 lg:col-3">
+      <div class="kpi-card" [style.--kpi-color]="'#3b82f6'">
+        <div class="kpi-top">
           <span class="kpi-label">Abiertos</span>
-          <span class="kpi-value">{{ data.abiertos }}</span>
+          <div class="kpi-badge kpi-badge--blue"><i class="pi pi-folder-open"></i></div>
         </div>
+        <div class="kpi-number">{{ data.abiertos }}</div>
+        <div class="kpi-bar"><div class="kpi-bar-fill" [style.width.%]="pct(data.abiertos)"></div></div>
+        <span class="kpi-sub">de {{ totalSiniestros }} total</span>
       </div>
     </div>
 
-    <div class="col-12 md:col-6 lg:col-3">
-      <div class="kpi-card kpi-yellow">
-        <div class="kpi-icon"><i class="pi pi-clock"></i></div>
-        <div class="kpi-body">
+    <div class="col-12 sm:col-6 lg:col-3">
+      <div class="kpi-card" [style.--kpi-color]="'#f59e0b'">
+        <div class="kpi-top">
           <span class="kpi-label">En peritación</span>
-          <span class="kpi-value">{{ data.enPeritacion }}</span>
+          <div class="kpi-badge kpi-badge--yellow"><i class="pi pi-clock"></i></div>
         </div>
+        <div class="kpi-number">{{ data.enPeritacion }}</div>
+        <div class="kpi-bar"><div class="kpi-bar-fill" [style.width.%]="pct(data.enPeritacion)"></div></div>
+        <span class="kpi-sub">de {{ totalSiniestros }} total</span>
       </div>
     </div>
 
-    <div class="col-12 md:col-6 lg:col-3">
-      <div class="kpi-card kpi-green">
-        <div class="kpi-icon"><i class="pi pi-check-circle"></i></div>
-        <div class="kpi-body">
+    <div class="col-12 sm:col-6 lg:col-3">
+      <div class="kpi-card" [style.--kpi-color]="'#22c55e'">
+        <div class="kpi-top">
           <span class="kpi-label">Resueltos</span>
-          <span class="kpi-value">{{ data.resueltos }}</span>
+          <div class="kpi-badge kpi-badge--green"><i class="pi pi-check-circle"></i></div>
         </div>
+        <div class="kpi-number">{{ data.resueltos }}</div>
+        <div class="kpi-bar"><div class="kpi-bar-fill" [style.width.%]="pct(data.resueltos)"></div></div>
+        <span class="kpi-sub">de {{ totalSiniestros }} total</span>
       </div>
     </div>
 
-    <div class="col-12 md:col-6 lg:col-3">
-      <div class="kpi-card kpi-red">
-        <div class="kpi-icon"><i class="pi pi-times-circle"></i></div>
-        <div class="kpi-body">
+    <div class="col-12 sm:col-6 lg:col-3">
+      <div class="kpi-card" [style.--kpi-color]="'#ef4444'">
+        <div class="kpi-top">
           <span class="kpi-label">Denegados</span>
-          <span class="kpi-value">{{ data.denegados }}</span>
+          <div class="kpi-badge kpi-badge--red"><i class="pi pi-times-circle"></i></div>
         </div>
+        <div class="kpi-number">{{ data.denegados }}</div>
+        <div class="kpi-bar"><div class="kpi-bar-fill" [style.width.%]="pct(data.denegados)"></div></div>
+        <span class="kpi-sub">de {{ totalSiniestros }} total</span>
       </div>
     </div>
 
   </div>
 
-  <!-- ── Segunda fila: métricas + gráficas ── -->
+  <!-- ── Fila 2: Métricas + Gráfica de barras ── -->
   <div class="grid mb-4">
 
-    <div class="col-12 md:col-6 lg:col-3">
-      <div class="kpi-card kpi-teal">
-        <div class="kpi-icon"><i class="pi pi-euro"></i></div>
-        <div class="kpi-body">
-          <span class="kpi-label">Total indemnizado</span>
-          <span class="kpi-value kpi-value--sm">
-            {{ data.totalImporteIndemnizado | currency:'EUR':'symbol':'1.0-0':'es' }}
-          </span>
+    <!-- Métricas verticales -->
+    <div class="col-12 lg:col-4">
+      <div class="metrics-panel">
+
+        <div class="metric-item">
+          <div class="metric-icon metric-icon--teal"><i class="pi pi-euro"></i></div>
+          <div class="metric-body">
+            <span class="metric-label">Total indemnizado</span>
+            <span class="metric-value">{{ data.totalImporteIndemnizado | currency:'EUR':'symbol':'1.0-0':'es' }}</span>
+          </div>
         </div>
+
+        <div class="metric-divider"></div>
+
+        <div class="metric-item">
+          <div class="metric-icon metric-icon--purple"><i class="pi pi-calendar"></i></div>
+          <div class="metric-body">
+            <span class="metric-label">Media de resolución</span>
+            <span class="metric-value">
+              {{ data.mediaDiasResolucion ? (data.mediaDiasResolucion | number:'1.0-1':'es') + ' días' : '—' }}
+            </span>
+          </div>
+        </div>
+
+        <div class="metric-divider"></div>
+
+        <div class="metric-item">
+          <div class="metric-icon metric-icon--green"><i class="pi pi-chart-line"></i></div>
+          <div class="metric-body">
+            <span class="metric-label">Tasa de resolución</span>
+            <span class="metric-value">
+              {{ totalSiniestros > 0 ? ((data.resueltos / totalSiniestros) * 100 | number:'1.0-1':'es') + '%' : '—' }}
+            </span>
+          </div>
+          <!-- Mini barra de progreso -->
+          <div class="tasa-bar" *ngIf="totalSiniestros > 0">
+            <div class="tasa-bar-fill"
+              [style.width.%]="(data.resueltos / totalSiniestros) * 100">
+            </div>
+          </div>
+        </div>
+
       </div>
     </div>
 
-    <div class="col-12 md:col-6 lg:col-3">
-      <div class="kpi-card kpi-purple">
-        <div class="kpi-icon"><i class="pi pi-calendar"></i></div>
-        <div class="kpi-body">
-          <span class="kpi-label">Media resolución</span>
-          <span class="kpi-value">
-            {{ data.mediaDiasResolucion ? (data.mediaDiasResolucion | number:'1.0-1':'es') + ' días' : '—' }}
-          </span>
+    <!-- Gráfica de barras -->
+    <div class="col-12 lg:col-8">
+      <div class="chart-card">
+        <div class="chart-card-header">
+          <span class="chart-card-title">Siniestros por tipo de póliza</span>
         </div>
-      </div>
-    </div>
-
-    <div class="col-12 md:col-6 lg:col-3">
-      <div class="kpi-card kpi-gray">
-        <div class="kpi-icon"><i class="pi pi-database"></i></div>
-        <div class="kpi-body">
-          <span class="kpi-label">Total siniestros</span>
-          <span class="kpi-value">{{ totalSiniestros }}</span>
-        </div>
-      </div>
-    </div>
-
-    <div class="col-12 md:col-6 lg:col-3">
-      <div class="kpi-card kpi-gray">
-        <div class="kpi-icon"><i class="pi pi-chart-pie"></i></div>
-        <div class="kpi-body">
-          <span class="kpi-label">Tasa resolución</span>
-          <span class="kpi-value">
-            {{ totalSiniestros > 0 ? ((data.resueltos / totalSiniestros) * 100 | number:'1.0-1':'es') + '%' : '—' }}
-          </span>
+        <div class="chart-wrap">
+          <p-chart type="bar" [data]="chartBarras" [options]="chartOpcionesBarras" />
         </div>
       </div>
     </div>
 
   </div>
 
-  <!-- ── Gráficas ── -->
-  <div class="grid mb-4">
+  <!-- ── Fila 3: Donut + Últimos abiertos ── -->
+  <div class="grid">
 
-    <div class="col-12 lg:col-7">
-      <p-card header="Siniestros por tipo de póliza">
-        <div class="chart-container">
-          <p-chart type="bar" [data]="chartBarras" [options]="chartOpciones" height="260px" />
+    <!-- Donut -->
+    <div class="col-12 lg:col-4">
+      <div class="chart-card h-full">
+        <div class="chart-card-header">
+          <span class="chart-card-title">Distribución por estado</span>
         </div>
-      </p-card>
+        <div class="chart-wrap chart-wrap--donut">
+          <p-chart type="doughnut" [data]="chartDonut" [options]="chartOpcionesDonut" />
+        </div>
+      </div>
     </div>
 
-    <div class="col-12 lg:col-5">
-      <p-card header="Distribución por estado">
-        <div class="chart-container chart-container--donut">
-          <p-chart type="doughnut" [data]="chartDonut"
-            [options]="{ responsive:true, maintainAspectRatio:false,
-              plugins:{ legend:{ position:'bottom', labels:{ color:'rgba(240,244,248,0.7)', font:{ family:'Inter', size:12 }, padding:16 } } } }"
-            height="260px" />
+    <!-- Últimos abiertos -->
+    <div class="col-12 lg:col-8">
+      <div class="chart-card h-full">
+        <div class="chart-card-header">
+          <span class="chart-card-title">Últimos siniestros abiertos</span>
+          <a routerLink="/siniestros" class="chart-card-link">Ver todos <i class="pi pi-arrow-right"></i></a>
         </div>
-      </p-card>
+
+        <div class="sin-empty" *ngIf="data.ultimosAbiertos.length === 0">
+          <i class="pi pi-check-circle"></i>
+          <span>Sin siniestros abiertos</span>
+        </div>
+
+        <div class="sin-list" *ngIf="data.ultimosAbiertos.length > 0">
+          <div class="sin-row" *ngFor="let s of data.ultimosAbiertos"
+               [routerLink]="['/siniestros', s.id]">
+            <div class="sin-dot"></div>
+            <div class="sin-info">
+              <code>{{ s.numeroSiniestro }}</code>
+              <span class="sin-date">{{ s.fechaApertura | date:'dd MMM yyyy':'':'es' }}</span>
+            </div>
+            <div class="sin-amount">
+              {{ s.importeReclamado | currency:'EUR':'symbol':'1.0-0':'es' }}
+            </div>
+            <i class="pi pi-chevron-right sin-arrow"></i>
+          </div>
+        </div>
+      </div>
     </div>
 
   </div>
-
-  <!-- ── Últimos siniestros abiertos ── -->
-  <p-card header="Últimos siniestros abiertos">
-    <div *ngIf="data.ultimosAbiertos.length === 0" class="empty-state">
-      <i class="pi pi-inbox"></i>
-      <span>No hay siniestros abiertos</span>
-    </div>
-    <div class="ultimos-list" *ngIf="data.ultimosAbiertos.length > 0">
-      <div class="ultimos-item" *ngFor="let s of data.ultimosAbiertos" [routerLink]="['/siniestros', s.id]">
-        <code class="item-num">{{ s.numeroSiniestro }}</code>
-        <p-tag [value]="etiqueta(s.estado)" [severity]="severidad(s.estado)" />
-        <span class="item-importe">
-          {{ s.importeReclamado | currency:'EUR':'symbol':'1.0-0':'es' }}
-        </span>
-        <span class="item-fecha">{{ s.fechaApertura | date:'dd/MM/yyyy' }}</span>
-        <i class="pi pi-chevron-right item-arrow"></i>
-      </div>
-    </div>
-  </p-card>
 
 </ng-container>

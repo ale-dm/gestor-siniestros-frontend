@@ -1,10 +1,8 @@
-import { NgModule } from '@angular/core'; // updated
+import { NgModule } from '@angular/core';
 import { CommonModule } from '@angular/common';
 import { RouterModule, Routes } from '@angular/router';
 
-import { CardModule } from 'primeng/card';
 import { ChartModule } from 'primeng/chart';
-import { TagModule } from 'primeng/tag';
 import { SkeletonModule } from 'primeng/skeleton';
 
 import { DashboardComponent } from './dashboard.component';
@@ -16,7 +14,9 @@ const routes: Routes = [{ path: '', component: DashboardComponent }];
   imports: [
     CommonModule,
     RouterModule.forChild(routes),
-    CardModule, ChartModule, TagModule, SkeletonModule
+    RouterModule,
+    ChartModule,
+    SkeletonModule
   ]
 })
 export class DashboardModule {}

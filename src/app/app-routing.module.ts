@@ -1,6 +1,7 @@
 import { NgModule } from '@angular/core';
 import { RouterModule, Routes } from '@angular/router';
 import { authGuard } from './core/guards/auth.guard';
+import { roleGuard } from './core/guards/role.guard';
 
 const routes: Routes = [
   { path: '', redirectTo: 'dashboard', pathMatch: 'full' },
@@ -30,7 +31,8 @@ const routes: Routes = [
   },
   {
     path: 'usuarios',
-    canActivate: [authGuard],
+    canActivate: [authGuard, roleGuard],
+    data: { roles: ['ADMIN'] },
     loadChildren: () => import('./features/usuarios/usuarios.module').then(m => m.UsuariosModule)
   },
   { path: '**', redirectTo: 'dashboard' }

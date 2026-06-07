@@ -1,4 +1,4 @@
-import { Component, OnInit } from '@angular/core'; // v2
+import { Component, OnInit } from '@angular/core';
 import { DashboardService } from '../../core/services/dashboard.service';
 import { DashboardResumen } from '../../core/models/dashboard.model';
 

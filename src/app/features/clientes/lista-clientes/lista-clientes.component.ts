@@ -1,4 +1,5 @@
-import { Component, OnInit } from '@angular/core';
+import { Component, DestroyRef, OnInit } from '@angular/core';
+import { takeUntilDestroyed } from '@angular/core/rxjs-interop';
 import { Router } from '@angular/router';
 import { ConfirmationService } from 'primeng/api';
 import { ClienteService } from '../../../core/services/cliente.service';
@@ -26,12 +27,16 @@ export class ListaClientesComponent implements OnInit {
     private clienteService: ClienteService,
     private confirmationService: ConfirmationService,
     private toast: ToastService,
-    public router: Router
+    public router: Router,
+    private destroyRef: DestroyRef
   ) {}
 
   ngOnInit(): void {
-    this.searchSubject.pipe(debounceTime(350), distinctUntilChanged())
-      .subscribe(() => { this.page = 0; this.cargar(); });
+    this.searchSubject.pipe(
+      debounceTime(350),
+      distinctUntilChanged(),
+      takeUntilDestroyed(this.destroyRef)
+    ).subscribe(() => { this.page = 0; this.cargar(); });
     this.cargar();
   }
 

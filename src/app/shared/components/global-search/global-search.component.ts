@@ -1,7 +1,8 @@
 import { Component, ElementRef, HostListener, ViewChild } from '@angular/core';
+import { takeUntilDestroyed } from '@angular/core/rxjs-interop';
 import { Router } from '@angular/router';
-import { Subject } from 'rxjs';
-import { debounceTime, distinctUntilChanged, switchMap } from 'rxjs/operators';
+import { EMPTY, Subject, of } from 'rxjs';
+import { catchError, debounceTime, distinctUntilChanged, switchMap } from 'rxjs/operators';
 import { SearchService } from '../../../core/services/search.service';
 import { SearchResult } from '../../../core/models/search.model';
 
@@ -29,12 +30,18 @@ export class GlobalSearchComponent {
       switchMap(q => {
         if (q.length < 2) {
           this.resultados = [];
+          this.totalResultados = 0;
           this.mostrarDropdown = false;
-          return [];
+          return EMPTY;
         }
         this.cargando = true;
-        return this.searchService.buscar(q);
-      })
+        // El catchError va DENTRO del switchMap: así un fallo de red no termina el
+        // stream externo (de lo contrario el buscador dejaría de funcionar tras el 1er error).
+        return this.searchService.buscar(q).pipe(
+          catchError(() => { this.cargando = false; return of(null); })
+        );
+      }),
+      takeUntilDestroyed()
     ).subscribe({
       next: res => {
         if (!res) return;

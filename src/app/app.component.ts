@@ -73,6 +73,6 @@ export class AppComponent implements OnInit {
   }
 
   get currentUser() {
-    return this.auth['currentUserSubject'].value;
+    return this.auth.currentUser;
   }
 }

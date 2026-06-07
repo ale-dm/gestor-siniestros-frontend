@@ -1,6 +1,7 @@
 import { Component, OnInit } from '@angular/core';
 import { Router } from '@angular/router';
 import { SiniestroService } from '../../../core/services/siniestro.service';
+import { ToastService } from '../../../core/services/toast.service';
 import { Siniestro, EstadoSiniestro } from '../../../core/models/siniestro.model';
 
 @Component({
@@ -25,7 +26,13 @@ export class ListaSiniestrosComponent implements OnInit {
     { label: 'Denegado', value: 'DENEGADO' }
   ];
 
-  constructor(private siniestroService: SiniestroService, private router: Router) {}
+  private readonly MAX_EXPORT = 1000;
+
+  constructor(
+    private siniestroService: SiniestroService,
+    private router: Router,
+    private toast: ToastService
+  ) {}
 
   ngOnInit(): void { this.cargar(); }
 
@@ -43,9 +50,15 @@ export class ListaSiniestrosComponent implements OnInit {
 
   exportarCSV(): void {
     this.exportando = true;
-    // Carga todos los siniestros con el filtro activo (hasta 1000)
-    this.siniestroService.listar(this.filtroEstado ?? undefined, undefined, 0, 1000).subscribe({
+    // Carga todos los siniestros con el filtro activo (hasta MAX_EXPORT)
+    this.siniestroService.listar(this.filtroEstado ?? undefined, undefined, 0, this.MAX_EXPORT).subscribe({
       next: res => {
+        if (res.totalElements > res.content.length) {
+          this.toast.warn(
+            `Se exportan los primeros ${res.content.length} de ${res.totalElements} siniestros. ` +
+            'Afina el filtro para incluir el resto.'
+          );
+        }
         const csv = this.generarCSV(res.content);
         this.descargarArchivo(csv, `siniestros_${new Date().toISOString().slice(0, 10)}.csv`);
         this.exportando = false;

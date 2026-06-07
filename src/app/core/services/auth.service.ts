@@ -17,16 +17,18 @@ export class AuthService {
 
   constructor(private http: HttpClient, private router: Router) {}
 
+  /** Usuario autenticado actual (snapshot). Evita accesos al estado interno desde fuera. */
+  get currentUser(): AuthResponse | null {
+    return this.currentUserSubject.value;
+  }
+
   login(username: string, password: string): Observable<AuthResponse> {
     return this.http.post<AuthResponse>(`${environment.apiUrl}/auth/login`, { username, password })
       .pipe(tap(res => this.storeSession(res)));
   }
 
   logout(): void {
-    localStorage.removeItem(this.TOKEN_KEY);
-    localStorage.removeItem(this.REFRESH_KEY);
-    localStorage.removeItem(this.USER_KEY);
-    this.currentUserSubject.next(null);
+    this.clearSession();
     this.router.navigate(['/login']);
   }
 
@@ -37,7 +39,12 @@ export class AuthService {
   isLoggedIn(): boolean {
     const token = this.getToken();
     if (!token) return false;
-    return !this.isTokenExpired(token);
+    if (this.isTokenExpired(token)) {
+      // Token caducado: limpiamos la sesión para que getRole()/currentUser no queden obsoletos.
+      this.clearSession();
+      return false;
+    }
+    return true;
   }
 
   getRole(): Rol | null {
@@ -54,6 +61,14 @@ export class AuthService {
     localStorage.setItem(this.REFRESH_KEY, res.refreshToken);
     localStorage.setItem(this.USER_KEY, JSON.stringify(res));
     this.currentUserSubject.next(res);
+  }
+
+  /** Borra la sesión persistida y emite null, sin navegar. */
+  private clearSession(): void {
+    localStorage.removeItem(this.TOKEN_KEY);
+    localStorage.removeItem(this.REFRESH_KEY);
+    localStorage.removeItem(this.USER_KEY);
+    this.currentUserSubject.next(null);
   }
 
   private getStoredUser(): AuthResponse | null {

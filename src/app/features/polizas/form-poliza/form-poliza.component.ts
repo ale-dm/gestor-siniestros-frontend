@@ -58,7 +58,13 @@ export class FormPolizaComponent implements OnInit {
       this.loading = true;
       this.polizaService.obtener(this.polizaId).subscribe({
         next: p => {
-          this.form.patchValue({ ...p, clienteId: p.cliente?.id });
+          // p-calendar trabaja con objetos Date; el backend entrega strings 'yyyy-MM-dd'.
+          this.form.patchValue({
+            ...p,
+            clienteId: p.cliente?.id,
+            fechaInicio: this.parseFecha(p.fechaInicio),
+            fechaVencimiento: this.parseFecha(p.fechaVencimiento)
+          });
           this.loading = false;
         },
         error: () => { this.loading = false; this.router.navigate(['/polizas']); }
@@ -71,9 +77,17 @@ export class FormPolizaComponent implements OnInit {
   guardar(): void {
     if (this.form.invalid) { this.form.markAllAsTouched(); return; }
     this.saving = true;
+
+    // p-calendar emite Date; el backend (LocalDate) espera 'yyyy-MM-dd' sin desfase horario.
+    const payload = {
+      ...this.form.value,
+      fechaInicio: this.formatFecha(this.form.value.fechaInicio),
+      fechaVencimiento: this.formatFecha(this.form.value.fechaVencimiento)
+    };
+
     const op = this.esEdicion
-      ? this.polizaService.actualizar(this.polizaId!, this.form.value)
-      : this.polizaService.crear(this.form.value);
+      ? this.polizaService.actualizar(this.polizaId!, payload)
+      : this.polizaService.crear(payload);
 
     op.subscribe({
       next: () => {
@@ -86,4 +100,22 @@ export class FormPolizaComponent implements OnInit {
 
   cancelar(): void { this.router.navigate(['/polizas']); }
   fieldInvalid(name: string): boolean { const c = this.form.get(name); return !!(c?.invalid && c?.touched); }
+
+  /** 'yyyy-MM-dd' -> Date local (evita el desfase de zona horaria de `new Date(string)`). */
+  private parseFecha(valor: string | null | undefined): Date | null {
+    if (!valor) return null;
+    const [a, m, d] = valor.split('-').map(Number);
+    if (!a || !m || !d) return null;
+    return new Date(a, m - 1, d);
+  }
+
+  /** Date (o string) -> 'yyyy-MM-dd' usando componentes locales, sin convertir a UTC. */
+  private formatFecha(valor: Date | string | null | undefined): string | null {
+    if (!valor) return null;
+    if (typeof valor === 'string') return valor;
+    const a = valor.getFullYear();
+    const m = `${valor.getMonth() + 1}`.padStart(2, '0');
+    const d = `${valor.getDate()}`.padStart(2, '0');
+    return `${a}-${m}-${d}`;
+  }
 }

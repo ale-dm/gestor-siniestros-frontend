@@ -1,4 +1,5 @@
 import { Component, OnInit } from '@angular/core';
+import { takeUntilDestroyed } from '@angular/core/rxjs-interop';
 import { ActivatedRoute, Router } from '@angular/router';
 import { FormBuilder, FormGroup, Validators } from '@angular/forms';
 import { ToastService } from '../../../core/services/toast.service';
@@ -44,6 +45,21 @@ export class DetalleSiniestroComponent implements OnInit {
     this.formPerito = this.fb.group({
       peritoId: [null, Validators.required]
     });
+
+    // Validación condicional acorde a lo que muestra la plantilla:
+    // RESUELTO exige importe indemnizado; DENEGADO exige observaciones (motivo).
+    this.formEstado.get('estado')!.valueChanges
+      .pipe(takeUntilDestroyed())
+      .subscribe((estado: EstadoSiniestro) => {
+        const importe = this.formEstado.get('importeIndemnizado')!;
+        const obs = this.formEstado.get('observaciones')!;
+
+        importe.setValidators(estado === 'RESUELTO' ? [Validators.required, Validators.min(0)] : []);
+        obs.setValidators(estado === 'DENEGADO' ? [Validators.required] : []);
+
+        importe.updateValueAndValidity({ emitEvent: false });
+        obs.updateValueAndValidity({ emitEvent: false });
+      });
   }
 
   ngOnInit(): void {
